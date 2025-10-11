@@ -5,7 +5,7 @@ function App() {
 
   return (
    <h1 className='text-blue-500'>
-    kuy em don gu soi tood
+    Hello World
    </h1>
       
   )
