@@ -8,16 +8,13 @@ const NavBar: React.FC = () => {
     
       {/* Desktop Menu */}
       <ul className="hidden md:flex gap-20">
-        <li className="hover:text-gray-200 cursor-pointer text-5xl font-bold ">Home</li>
-        <li className="hover:text-gray-200 cursor-pointer text-5xl font-bold">WebBoard</li>
+        <li className="hover:text-gray-200 cursor-pointer text-5xl font-bold p-3">Home</li>
+        <li className="hover:text-gray-200 cursor-pointer text-5xl font-bold p-3">WebBoard</li>
           {/* Logo / Brand */}
-        <div
-            className="w-20 h-20 bg-center bg-contain bg-no-repeat"
-            style={{ backgroundImage: "url('/logo_real.png')" }}
-        ></div>
+        <li className="w-20 h-20 bg-contain "style={{ backgroundImage: "url('/logo_real.png')" }}></li>
           {/* Logo / Brand */}
-        <li className="hover:text-gray-200 cursor-pointer text-5xl font-bold">Gallery</li>
-        <li className="hover:text-gray-200 cursor-pointer text-5xl font-bold">Profile</li>
+        <li className="hover:text-gray-200 cursor-pointer text-5xl font-bold p-3">Gallery</li>
+        <li className="hover:text-gray-200 cursor-pointer text-5xl font-bold p-3">Profile</li>
       </ul>
 
       {/* Hamburger Button (มือถือ) */}
