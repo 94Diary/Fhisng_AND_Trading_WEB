@@ -7,7 +7,6 @@ function App() {
       <NavBar/>
       {/* Content ขยายเต็มพื้นที่ที่เหลือ */}
       <Home></Home>
-      
     </div>
   )
 }
