@@ -1,16 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 
 const NavBar: React.FC = () => {
-    return (
-        <nav className="bg-blue-600 p-4 text-white px-6 flex justify-center items-center w-screen">
-           <ul className="hidden md:flex gap-20">
-            <li className="hover:text-gray-200 cursor-pointer text-2xl font-bold">Home</li>
-            <li className="hover:text-gray-200 cursor-pointer text-2xl font-bold">WebBoard</li>
-            <li className="hover:text-gray-200 cursor-pointer text-2xl font-bold">Gallery</li>
-            <li className="hover:text-gray-200 cursor-pointer text-2xl font-bold">Profile</li>
-           </ul>
-        </nav>
-    );
-}
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <nav className="bg-blue-600 p-4 text-white px-10 flex justify-center items-center w-full h-3px fixed top-0 left-0 z-10">
+    
+      {/* Desktop Menu */}
+      <ul className="hidden md:flex gap-20">
+        <li className="hover:text-gray-200 cursor-pointer text-5xl font-bold ">Home</li>
+        <li className="hover:text-gray-200 cursor-pointer text-5xl font-bold">WebBoard</li>
+          {/* Logo / Brand */}
+        <div
+            className="w-20 h-20 bg-center bg-contain bg-no-repeat"
+            style={{ backgroundImage: "url('/logo_real.png')" }}
+        ></div>
+          {/* Logo / Brand */}
+        <li className="hover:text-gray-200 cursor-pointer text-5xl font-bold">Gallery</li>
+        <li className="hover:text-gray-200 cursor-pointer text-5xl font-bold">Profile</li>
+      </ul>
+
+      {/* Hamburger Button (มือถือ) */}
+      <div className="md:hidden cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+        {/* สามขีด */}
+        <div className="w-6 h-1 bg-white my-1"></div>
+        <div className="w-6 h-1 bg-white my-1"></div>
+        <div className="w-6 h-1 bg-white my-1"></div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <ul className="absolute top-full left-0 w-full bg-blue-600 flex flex-col items-center md:hidden">
+          <li className="py-2 text-xl w-full text-center hover:bg-blue-500 cursor-pointer">Home</li>
+          <li className="py-2 text-xl w-full text-center hover:bg-blue-500 cursor-pointer">WebBoard</li>
+          <li className="py-2 text-xl w-full text-center hover:bg-blue-500 cursor-pointer">Gallery</li>
+          <li className="py-2 text-xl w-full text-center hover:bg-blue-500 cursor-pointer">Profile</li>
+        </ul>
+      )}
+    </nav>
+  );
+};
 
 export default NavBar;
