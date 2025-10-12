@@ -13,11 +13,11 @@ const Home = () => {
       {/* Center Panel */}
       <div className="flex-1 flex flex-col ">
         {/* Top Center */}
-        <div className="h-1/7 bg-transparent m-4 p-4">
+        <div className="h-1/8 bg-transparent m-12 p-4">
           <Code />
         </div>
         {/* Bottom Center */}
-        <div className="flex-1 bg-gray-800 h-64 overflow-auto m-4 p-4 ">
+        <div className="flex-1 bg-gray-800 h-64 overflow-auto m-8 p-4 ">
           <Content
             imageUrl="https://media.discordapp.net/attachments/875553315172270180/1426921767301021849/Untitled_design.png?ex=68ecfbf4&is=68ebaa74&hm=ecdafbaee224a90aee08f471f86a1b6cbe80ab6c30d0f4fdf6d6db29fc756420&=&format=webp&quality=lossless&width=1027&height=578"
             title="Welcome to the Home Page"
