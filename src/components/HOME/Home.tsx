@@ -5,9 +5,7 @@ const Home = () => {
   return (
     <div className="flex-1 bg-gray-800 text-white text-3xl p-6">
       ยินดีต้อนรับสู่หน้า Home
-        <div className='flex-1 mt-6 bg-red-800 text-white text-3xl rounded-lg shadow-lg p-6 w-full'>
-            <Code/>
-        </div>
+        <Code/>
         <div className='flex-1 mt-6 bg-red-800 text-white text-3xl rounded-lg shadow-lg p-6 w-full'>
             <Content />
         </div>
