@@ -1,12 +1,15 @@
 
 import './App.css'
+import NavBar from './components/NavBar'
 
 function App() {
 
   return (
-   <h1 className='text-blue-500'>
-    Hello World
-   </h1>
+   <main className="min-h-screen bg-gray-900 text-white">
+    <NavBar></NavBar>
+    เนื้อหายาวเท่าไรก็ขยายต่อได้
+  </main>
+
       
   )
 }
