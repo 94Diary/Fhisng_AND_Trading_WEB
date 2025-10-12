@@ -7,7 +7,7 @@ interface ContentProps {
 
 const Content: React.FC<ContentProps> = ({ title, description, imageUrl }) => {
   return (
-   <div className="max-w-4xl mx-auto m-10 p-10 bg-gray-500 text-white text-2xl rounded-lg shadow-lg max-h-96 overflow-auto flex flex-col">
+   <div className="max-w-4xl mx-auto m-10 p-10 bg-gray-800 text-white text-2xl rounded-lg shadow-lg max-h-96 overflow-auto flex flex-col">
       <h1 className="font-bold text-5xl mb-4">{title}</h1>
       <p className="mb-4">{description}</p>
       {imageUrl && (
