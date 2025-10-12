@@ -9,9 +9,9 @@ function App() {
     <NavBar></NavBar>
     เนื้อหายาวเท่าไรก็ขยายต่อได้
   </main>
-
-      
+  
   )
+
 }
 
 export default App
