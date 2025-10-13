@@ -50,7 +50,7 @@ const Home = () => {
 
       {/* Right Panel */}
       <div className="w-1/5 flex flex-col">
-        <div className="h-1/4 m-4 bg-gray-300/60  p-5 text-red-500">
+        <div className="flex-2 m-4 bg-gray-300/60 p-5 text-red-500">
           ขวาบน
         </div>
         <div className="flex-1 m-4 bg-gray-300/60 p-4 text-red-500">
