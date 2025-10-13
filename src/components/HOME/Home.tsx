@@ -1,0 +1,64 @@
+// components/HOME/Home.tsx
+import Content from "./Content";
+import Code from "./Code";
+
+const Home = () => {
+  return (
+    <div className="flex-1 flex h-full w-full pt-20"> {/* pt-20 ให้ space สำหรับ NavBar ล็อค */}
+      {/* Left Panel */}
+      <div className="w-1/5 m-4 p-5 bg-gray-300/60 text-red-500 ">
+        ซ้าย
+      </div>
+
+      {/* Center Panel */}
+      <div className="flex-1 flex flex-col ">
+        {/* Top Center */}
+        <div className="h-1/8 bg-transparent m-12 p-4">
+          <Code />
+        </div>
+        {/* Bottom Center */}
+        <div className="flex-1 bg-gray-800 h-64 overflow-auto m-8 p-4 ">
+          
+         <Content
+            imageUrl="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSgQJolH1qSi-mDOWfYmceIBY6Bjf2sxUlI026bF3FtyV5_75tzIZz3Vd7kK3xVW5iKCjM1D_nIJ7WNZUjtIxBNVVX0IMuSdrIN2ImOww"
+            title="Welcome to the Home Page"
+            description="สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา..."
+          />
+          <Content
+            imageUrl="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSgQJolH1qSi-mDOWfYmceIBY6Bjf2sxUlI026bF3FtyV5_75tzIZz3Vd7kK3xVW5iKCjM1D_nIJ7WNZUjtIxBNVVX0IMuSdrIN2ImOww"
+            title="Welcome to the Home Page"
+            description="สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
+            สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา..."
+          />
+          
+        </div>
+        
+      </div>
+
+      {/* Right Panel */}
+      <div className="w-1/5 flex flex-col">
+        <div className="flex-2 m-4 bg-gray-300/60 p-5 text-red-500">
+          ขวาบน
+        </div>
+        <div className="flex-1 m-4 bg-gray-300/60 p-4 text-red-500">
+          ขวาล่าง
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Home;
