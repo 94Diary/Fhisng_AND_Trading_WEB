@@ -1,7 +1,6 @@
 import React  from "react";
-import { Link } from "react-router-dom";
 
-const Profile = () => {
+const CheckIn = () => {
   return (
     <div className=" mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen p-6">
       <div className="flex w-[90%] gap-6">
@@ -24,22 +23,15 @@ const Profile = () => {
 
         {/* กล่องด้านขวา (หมวดหมู่) */}
           <div className="w-[70%] bg-gray-800 rounded-lg p-6 flex flex-col gap-6">
-            <h2 className="text-3xl font-bold">Accout Info</h2>
-            <div className="space-y-3">
-              <p>
-                Display Name: <span className="font-semibold">DuckOneMandown</span>
-              </p>
-              <p>
-                UserName: <span className="font-semibold">DuckOneMandown</span>
-              </p>
-              <p>
-                Email: <span className="font-semibold">Duck@gmail.com</span>
-              </p>
-            </div>
+            <h2 className="text-3xl font-bold">Check-In</h2>
+            <p>
+                มาล็อคอินกันด้วยยยย
+            </p>
+            
           </div>
       </div>
     </div>
   )
 }
 
-export default Profile
+export default CheckIn

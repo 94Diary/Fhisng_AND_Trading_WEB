@@ -5,6 +5,7 @@ import Home from './components/HOME/Home';
 import WebBoard from './components/WEBBOARD/WebBoard';
 import Gallery from './components/GALLERY/Gallery';
 import Profile from './components/PROFILE/Profile';
+import CheckIn from './components/PROFILE/CheckIn';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/webboard" element={<WebBoard />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/CheckIn" element={<CheckIn />} />
           </Routes>
         </div>
       </div>
