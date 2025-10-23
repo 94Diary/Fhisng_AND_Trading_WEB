@@ -3,7 +3,7 @@ import Code from "./Code";
 import Buttons from "../Buttons/Buttons";
 import { Link } from "react-router-dom";
 
-const Home = () => {
+const HomeAfterLogin = () => {
   return (
     <div className="flex-1 flex h-full w-full pt-20 "> {/* pt-20 ให้ space สำหรับ NavBar ล็อค */}
       {/* Center Panel */}
@@ -100,17 +100,9 @@ const Home = () => {
       
       <div className="w-1/5 flex flex-col ">
         <div className="flex flex-col gap-4 justify-center items-center m-4 bg-gray-800/60 p-5 text-red-500 rounded-3xl">
-          <Buttons variant="login">
-            <Link to="/PROFILE/Login">
-            Login
-            </Link>
-          </Buttons>
-
-          <Buttons variant="register">
-            <Link to="/PROFILE/RegisterPage">
-            Register
-            </Link>
-          </Buttons>
+          Username : Duck 
+          DisplayName : Duck
+          Status Online
         </div>
         <div className="flex-1 m-4 bg-gray-800/80 p-4 text-red-500">
           ขวา
@@ -120,4 +112,4 @@ const Home = () => {
   )
 }
 
-export default Home;
+export default HomeAfterLogin;

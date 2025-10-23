@@ -5,7 +5,7 @@ const NavBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-gray-800 p-0.4 text-white px-10 flex justify-center items-center w-full fixed top-0 left-0 z-10 shadow-md">
+    <nav className="bg-gray-800/80 p-0.4 text-white px-10 flex justify-center items-center w-full fixed top-0 left-0 z-10 shadow-md">
       {/* Desktop Menu */}
       <ul className="hidden md:flex gap-20 items-center">
         <li>

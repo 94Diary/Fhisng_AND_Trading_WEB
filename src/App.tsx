@@ -6,6 +6,10 @@ import WebBoard from './components/WEBBOARD/WebBoard';
 import Gallery from './components/GALLERY/Gallery';
 import Profile from './components/PROFILE/Profile';
 import CheckIn from './components/PROFILE/CheckIn';
+import Footer from "./components/Footer";
+import Login from './components/PROFILE/login';
+import RegisterPage from './components/PROFILE/RegisterPage';
+import HomeAfterLogin from './components/HOME/HomeAfterLogin';
 
 function App() {
   return (
@@ -20,6 +24,8 @@ function App() {
         {/* NavBar fixed บนสุด */}
         <NavBar />
 
+        
+
         {/* ส่วนเนื้อหาหลัก */}
         <div className="flex-1 pt-24">
           <Routes>
@@ -28,8 +34,15 @@ function App() {
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/CheckIn" element={<CheckIn />} />
+            <Route path="/PROFILE/login" element={<Login />} />
+            <Route path="/PROFILE/RegisterPage" element={<RegisterPage />} />
+            <Route path="/HOME/HomeAfterLogin" element={<HomeAfterLogin />} />
           </Routes>
         </div>
+
+        {/* Footer แสดงทุกหน้า */}
+        <Footer />
+
       </div>
     </Router>
   );
