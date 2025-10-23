@@ -2,7 +2,7 @@ import React, {useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Buttons from "../Buttons/Buttons";
 
-const Profile = () => {
+const CheckIn = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -29,7 +29,7 @@ const Profile = () => {
           {/* รูปโปรไฟล์*/}
           <div className="w-40 h-40 rounded-full bg-white overflow-hidden cursor-pointer hover:opacity-50" onClick={handleImageClick}>
             {profileImage ? (
-              <img src = {profileImage} alt = "Profile" className="w-full h-full object-cover"/>
+              <img src = {profileImage} alt = "CheckIn" className="w-full h-full object-cover"/>
             ) : (
               <div className="w-full h-full flex items-center justify-center text-black font-bold opacity-0 hover:opacity-100">
                 Edit
@@ -49,7 +49,7 @@ const Profile = () => {
             className="hidden"
           />
           
-          <div className="px-4 py-1 font-bold shadow">Name</div>
+          <div className="px-4 py-1 rounded-lg font-bold shadow">Name</div>
           {/* ปุ่มเมนู*/}
           <Buttons variant="profileCom">
             <Link to="/Profile">
@@ -66,23 +66,27 @@ const Profile = () => {
         </div>
 
         {/* กล่องด้านขวา (หมวดหมู่) */}
-          <div className="w-[70%] bg-gray-800 rounded-3xl p-6 flex flex-col gap-6">
-            <h2 className="text-3xl font-bold">Accout Info</h2>
-            <div className="space-y-3">
-              <p>
-                Display Name: <span className="font-semibold">DuckOneMandown</span>
-              </p>
-              <p>
-                UserName: <span className="font-semibold">DuckOneMandown</span>
-              </p>
-              <p>
-                Email: <span className="font-semibold">Duck@gmail.com</span>
-              </p>
+          <div className="order-2 lg:order-1 w-full lg:w-[70%] bg-gray-800 rounded-3xl p-6 flex flex-col gap-6">
+            <h2 className="text-3xl font-bold">Check-In</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-10 bg-white/10 p-6 rounded-lg">
+              {Array.from({ length: 7 }).map((_, index) => (
+                <div key={index}
+                className="w-24 h-24 bg-gray-300 rounded-lg flex items-center justify-center text-black font-bold hover:rotate-12 transition hover:scale-110">
+                  Day {index + 1}
+                </div>
+              ))}
             </div>
+              <div className=" flex felx-col items-center justify-center m-4 ">
+                <Buttons variant="checkIn" size="lg">
+                  Check-In
+                </Buttons>
+
+              </div>
+            
           </div>
       </div>
     </div>
   )
 }
 
-export default Profile
+export default CheckIn

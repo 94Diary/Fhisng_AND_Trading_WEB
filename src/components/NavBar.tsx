@@ -5,17 +5,17 @@ const NavBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-blue-600 p-4 text-white px-10 flex justify-center items-center w-full fixed top-0 left-0 z-10 shadow-md">
+    <nav className="bg-gray-800/80 p-0.4 text-white px-10 flex justify-center items-center w-full fixed top-0 left-0 z-10 shadow-md">
       {/* Desktop Menu */}
       <ul className="hidden md:flex gap-20 items-center">
         <li>
-          <Link to="/" className="hover:text-gray-200 text-5xl font-bold p-3 transition">
+          <Link to="/" className="hover:text-gray-200 text-2xl font-bold p-3 transition">
             Home
           </Link>
         </li>
 
         <li>
-          <Link to="/webboard" className="hover:text-gray-200 text-5xl font-bold p-3 transition">
+          <Link to="/webboard" className="hover:text-gray-200 text-2xl font-bold p-3 transition">
             WebBoard
           </Link>
         </li>
@@ -27,13 +27,13 @@ const NavBar: React.FC = () => {
         ></li>
 
         <li>
-          <Link to="/gallery" className="hover:text-gray-200 text-5xl font-bold p-3 transition">
+          <Link to="/gallery" className="hover:text-gray-200 text-2xl font-bold p-3 transition">
             Gallery
           </Link>
         </li>
 
         <li>
-          <Link to="/profile" className="hover:text-gray-200 text-5xl font-bold p-3 transition">
+          <Link to="/profile" className="hover:text-gray-200 text-2xl font-bold p-3 transition">
             Profile
           </Link>
         </li>
