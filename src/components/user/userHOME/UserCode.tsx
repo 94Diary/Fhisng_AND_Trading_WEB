@@ -1,5 +1,5 @@
 // Home.tsx
-import CodeProps from './CodeProps'
+import CodeProps from './UserCodeProps'
 const Card = () => {
     const codeData = [
     { title: "Code 1" },

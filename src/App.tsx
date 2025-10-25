@@ -9,7 +9,8 @@ import CheckIn from './components/PROFILE/CheckIn';
 import Footer from "./components/Footer";
 import Login from './components/PROFILE/login';
 import RegisterPage from './components/PROFILE/RegisterPage';
-import HomeAfterLogin from './components/HOME/HomeAfterLogin';
+import UserHome from './components/user/userHOME/UserHome';
+import AdminHome from './components/admin/adminHOME/AdminHome';
 
 function App() {
   return (
@@ -33,10 +34,13 @@ function App() {
             <Route path="/webboard" element={<WebBoard />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/profile" element={<Profile />} />
+
+            <Route path="/admin/adminHome" element={<AdminHome />}/>
+
             <Route path="/CheckIn" element={<CheckIn />} />
             <Route path="/PROFILE/login" element={<Login />} />
             <Route path="/PROFILE/RegisterPage" element={<RegisterPage />} />
-            <Route path="/HOME/HomeAfterLogin" element={<HomeAfterLogin />} />
+            <Route path="/user/userHome" element={<UserHome />} />
           </Routes>
         </div>
 
