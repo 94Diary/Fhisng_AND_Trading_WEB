@@ -1,8 +1,31 @@
 import React, { useState } from "react";
 import Buttons from "../Buttons/Buttons";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (username === "admin" && password === "1234") {
+      localStorage.setItem("userRole","admin");
+      localStorage.setItem("username", username);
+      navigate("/admin/adminHome");
+    } else if (username === "user" && password === "1111") {
+      localStorage.setItem("userRole","user");
+      localStorage.setItem("username", username);
+      navigate("/user/userHome");
+    } else {
+      setError("Username or Password Incorrect EIEI");
+    }
+  };
+
+
+
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gray-900/50 p-4">
       {/* Card กลาง */}
@@ -11,19 +34,25 @@ const Login = () => {
 
 
         {/* ฟอร์ม */}
-        <form className="flex flex-col gap-4">
+        <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <input
-            type="Username"
+            type="text"
             placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="px-4 py-2 rounded-lg bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
           />
 
           <input
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="px-4 py-2 rounded-lg bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
 
           />
+
+          {error && <p className="text-red-400 text-sm text-center">{error}</p>}
 
           <div className="flex flex-col items-center justify-center">
           {/* ปุ่ม Login */}

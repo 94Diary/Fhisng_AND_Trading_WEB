@@ -1,9 +1,29 @@
 import Content from "./Content";
 import Code from "./Code";
 import Buttons from "../Buttons/Buttons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import React,{ useState, useEffect} from "react";
 
 const Home = () => {
+  const navigate = useNavigate();
+      const [username, setUsername] = useState("");
+  
+      useEffect(() => {
+          const role = localStorage.getItem("userRole");
+          const name = localStorage.getItem("username");
+          if (role !== "user") {
+              navigate("/")
+          } else {
+              setUsername(name || "");
+          }
+      }, [navigate]);
+  
+      const handleLogout = () => {
+          localStorage.clear();
+          navigate("/");
+      };
+
+
   return (
     <div className="flex-1 flex h-full w-full pt-20 "> {/* pt-20 ให้ space สำหรับ NavBar ล็อค */}
       {/* Center Panel */}
@@ -12,6 +32,7 @@ const Home = () => {
         <div className="h-1/8 bg-transparent m-12 p-4  " >
           <Code />
         </div>
+        
         {/* Bottom Center */}
         <div className="flex-1  h-64 overflow-auto m-8 p-6 gap-11 bg-gray-800 rounded-3xl ">
           
@@ -106,7 +127,7 @@ const Home = () => {
             </Link>
           </Buttons>
 
-          <Buttons variant="register">
+          <Buttons variant="register" >
             <Link to="/PROFILE/RegisterPage">
             Register
             </Link>
