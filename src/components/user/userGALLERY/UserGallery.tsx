@@ -1,7 +1,8 @@
-import Buttons from "../Buttons/Buttons";
+import Buttons from "../../Buttons/Buttons";
 import { Link } from "react-router-dom";
 
 const GALLERY = () => {
+  
   return (
     <div className=" mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen p-6">
       {/* ปุ่มสร้างกระทู้ */}

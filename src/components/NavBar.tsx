@@ -1,21 +1,23 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const NavBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-gray-800 p-0.4 text-white px-10 flex justify-center items-center w-full fixed top-0 left-0 z-10 shadow-md">
+    <nav className="bg-gray-800/80 p-0.4 text-white px-10 flex justify-center items-center w-full fixed top-0 left-0 z-10 shadow-md">
       {/* Desktop Menu */}
-      <ul className="hidden md:flex gap-20 items-center">
-        <li>
-          <Link to="/" className="hover:text-gray-200 text-2xl font-bold p-3 transition">
+      <ul className="hidden md:flex gap-20 items-center ">
+        <li className="hover:shadow-2xl hover:shadow-purple-800">
+          <Link to="/" className="hover:bg-clip-text hover:text-transparent hover:bg-gradient-to-r from-[#B58ECC] to-[#5DE6DE] text-2xl font-bold p-3 transition">
+            
             Home
+            
           </Link>
         </li>
 
-        <li>
-          <Link to="/webboard" className="hover:text-gray-200 text-2xl font-bold p-3 transition">
+        <li className="hover:shadow-2xl hover:shadow-purple-800">
+          <Link to="/webboard" className=" hover:bg-clip-text hover:text-transparent hover:bg-gradient-to-r from-[#B58ECC] to-[#5DE6DE] text-2xl font-bold p-3 transition">
             WebBoard
           </Link>
         </li>
@@ -26,14 +28,14 @@ const NavBar: React.FC = () => {
           style={{ backgroundImage: "url('/logo_real.png')" }}
         ></li>
 
-        <li>
-          <Link to="/gallery" className="hover:text-gray-200 text-2xl font-bold p-3 transition">
+        <li className="hover:shadow-2xl hover:shadow-purple-800">
+          <Link to="/gallery" className="hover:bg-clip-text hover:text-transparent hover:bg-gradient-to-r from-[#B58ECC] to-[#5DE6DE] text-2xl font-bold p-3 transition">
             Gallery
           </Link>
         </li>
 
-        <li>
-          <Link to="/profile" className="hover:text-gray-200 text-2xl font-bold p-3 transition">
+        <li className="hover:shadow-2xl hover:shadow-purple-800">
+          <Link to="/profile" className="hover:bg-clip-text hover:text-transparent hover:bg-gradient-to-r from-[#B58ECC] to-[#5DE6DE] text-2xl font-bold p-3 transition">
             Profile
           </Link>
         </li>

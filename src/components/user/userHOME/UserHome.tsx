@@ -1,10 +1,10 @@
-import Content from "./Content";
-import Code from "./Code";
-import Buttons from "../Buttons/Buttons";
+import Content from "./UserContent";
+import Code from "./UserCode";
+import Buttons from "../../Buttons/Buttons";
 import { Link, useNavigate } from "react-router-dom";
 import React,{ useState, useEffect} from "react";
 
-const Home = () => {
+const UserHome = () => {
   const navigate = useNavigate();
       const [username, setUsername] = useState("");
   
@@ -20,7 +20,6 @@ const Home = () => {
   
       const handleLogout = () => {
           localStorage.clear();
-          navigate("/");
       };
 
 
@@ -38,7 +37,7 @@ const Home = () => {
           
          <Content
             imageUrl="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSgQJolH1qSi-mDOWfYmceIBY6Bjf2sxUlI026bF3FtyV5_75tzIZz3Vd7kK3xVW5iKCjM1D_nIJ7WNZUjtIxBNVVX0IMuSdrIN2ImOww"
-            title="Welcome to the Home Page"
+            title="User"
             description="สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
             สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
             สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา...
@@ -120,18 +119,19 @@ const Home = () => {
       {/* Right Panel */}
       
       <div className="w-1/5 flex flex-col ">
-        <div className="flex flex-col gap-4 justify-center items-center m-4 bg-gray-800/60 p-5 text-red-500 rounded-3xl">
-          <Buttons variant="login">
-            <Link to="/PROFILE/Login">
-            Login
+        <div className="flex flex-col gap-4 justify-center items-center m-4 bg-gray-800/60 p-5 text-white text-xl rounded-3xl">
+          <div>
+            <p>
+                Hi, {username}
+            </p>
+          </div>
+          <Buttons variant="logout">
+            <Link to="/" onClick={handleLogout}>
+            Logout
             </Link>
           </Buttons>
+        
 
-          <Buttons variant="register" >
-            <Link to="/PROFILE/RegisterPage">
-            Register
-            </Link>
-          </Buttons>
         </div>
         <div className="flex-1 m-4 bg-gray-800/80 p-4 text-red-500">
           ขวา
@@ -141,4 +141,4 @@ const Home = () => {
   )
 }
 
-export default Home;
+export default UserHome;
