@@ -19,10 +19,10 @@ const WebBoard = () => {
       <div className="flex w-[90%] gap-6">
 
         {/* กล่องด้านซ้าย */}
-        <div className="flex-1 flex-col gap-6 bg-gray-800 p-6 rounded-lg ">
+        <div className="flex-1 flex-col bg-gray-800 p-6 rounded-lg gap-6 flex">
           {/* การ์ด */}
-          <div className="h-[100px] w-[100px] bg-orange-500 shadow rounded-3xl"></div>
-          <div className="h-[100px] w-[100px] bg-orange-500 shadow rounded-3xl"></div>
+          <Category title="หมวดหมู่ 1" description="รายละเอียดหมวดหมู่ 1 รายละเอียดหมวดหมู่ 1 รายละเอียดหมวดหมู่ 1 รายละเอียดหมวดหมู่ 1 รายละเอียดหมวดหมู่ 1 " />
+          <Category title="หมวดหมู่ 2" description="รายละเอียดหมวดหมู่ 2 รายละเอียดหมวดหมู่ 22 รายละเอียดหมวดหมู่ 12 รายละเอียดหมวดหมู่ 12 รายละเอียดหมวดหมู่ 22 " />
         </div>
 
         {/* กล่องด้านขวา (หมวดหมู่) */}
