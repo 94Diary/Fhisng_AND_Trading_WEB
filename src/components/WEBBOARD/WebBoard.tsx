@@ -1,5 +1,4 @@
 import Buttons from "../Buttons/Buttons";
-import { Link } from "react-router-dom";
 
 /*dddddd*/ /*dddddd*//*dddddd*//*dddddd*//*dddddd*/
 const WebBoard = () => { 
