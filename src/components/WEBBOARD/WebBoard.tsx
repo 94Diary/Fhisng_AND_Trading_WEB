@@ -1,5 +1,5 @@
 import Buttons from "../Buttons/Buttons";
-import { Link } from "react-router-dom";
+import Category from "./Category";
 
 /*dddddd*/ /*dddddd*//*dddddd*//*dddddd*//*dddddd*/
 const WebBoard = () => { 
@@ -19,10 +19,17 @@ const WebBoard = () => {
       <div className="flex w-[90%] gap-6">
 
         {/* กล่องด้านซ้าย */}
-        <div className="flex-1 flex-col gap-6 bg-gray-800 p-6 rounded-lg ">
+        <div className="flex flex-1 flex-col gap-6 bg-gray-800 p-6 rounded-lg">
           {/* การ์ด */}
-          <div className="h-[100px] w-[100px] bg-orange-500 shadow rounded-3xl"></div>
-          <div className="h-[100px] w-[100px] bg-orange-500 shadow rounded-3xl"></div>
+          
+          <Category 
+            title="หมวดหมู่ทั่วไป"
+            description="พูดคุยเรื่องทั่วไปที่ไม่เข้าพวก"
+          />
+          <Category 
+            title="หมวดหมู่ข่าวสาร"
+            description="อัพเดทข่าวสารต่างๆ ที่น่าสนใจ"
+          />
         </div>
 
         {/* กล่องด้านขวา (หมวดหมู่) */}
