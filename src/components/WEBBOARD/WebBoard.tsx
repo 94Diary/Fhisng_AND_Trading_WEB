@@ -1,7 +1,6 @@
+import { Outlet } from "react-router-dom";
 import Buttons from "../Buttons/Buttons";
-import Category from "./Category";
 
-/*dddddd*/ /*dddddd*//*dddddd*//*dddddd*//*dddddd*/
 const WebBoard = () => { 
   return (
     <div className=" mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen p-6">
@@ -22,14 +21,7 @@ const WebBoard = () => {
         <div className="flex flex-1 flex-col gap-6 bg-gray-800 p-6 rounded-lg">
           {/* การ์ด */}
           
-          <Category 
-            title="หมวดหมู่ทั่วไป"
-            description="พูดคุยเรื่องทั่วไปที่ไม่เข้าพวก"
-          />
-          <Category 
-            title="หมวดหมู่ข่าวสาร"
-            description="อัพเดทข่าวสารต่างๆ ที่น่าสนใจ"
-          />
+          <Outlet />
         </div>
 
         {/* กล่องด้านขวา (หมวดหมู่) */}
