@@ -1,7 +1,6 @@
+import { Outlet } from "react-router-dom";
 import Buttons from "../Buttons/Buttons";
-import { Link } from "react-router-dom";
 
-/*dddddd*/ /*dddddd*//*dddddd*//*dddddd*//*dddddd*/
 const WebBoard = () => { 
   return (
     <div className=" mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen p-6">
@@ -19,10 +18,10 @@ const WebBoard = () => {
       <div className="flex w-[90%] gap-6">
 
         {/* กล่องด้านซ้าย */}
-        <div className="flex-1 flex-col gap-6 bg-gray-800 p-6 rounded-lg ">
+        <div className="flex flex-1 flex-col gap-6 bg-gray-800 p-6 rounded-lg">
           {/* การ์ด */}
-          <div className="h-[100px] w-[100px] bg-orange-500 shadow rounded-3xl"></div>
-          <div className="h-[100px] w-[100px] bg-orange-500 shadow rounded-3xl"></div>
+          
+          <Outlet />
         </div>
 
         {/* กล่องด้านขวา (หมวดหมู่) */}

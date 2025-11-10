@@ -11,6 +11,9 @@ import Login from './components/PROFILE/login';
 import RegisterPage from './components/PROFILE/RegisterPage';
 import UserHome from './components/user/userHOME/UserHome';
 import AdminHome from './components/admin/adminHOME/AdminHome';
+import CategoryList from './components/WEBBOARD/CategoryList';
+import ContentAdmin from './components/WEBBOARD/ContentAdmin';
+import ContentUser from './components/WEBBOARD/ContentUser';
 
 function App() {
   return (
@@ -31,7 +34,14 @@ function App() {
         <div className="flex-1 pt-24">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/webboard" element={<WebBoard />} />
+            
+             {/* Layout ของ WebBoard */}
+            <Route path="/webboard" element={<WebBoard />}>
+              <Route index element={<CategoryList/>} /> {/* แสดง list ตอนยังไม่กด */}
+              <Route path="news" element={<ContentAdmin />} />
+              <Route path="general" element={<ContentUser />} />
+            </Route>
+
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/profile" element={<Profile />} />
 
