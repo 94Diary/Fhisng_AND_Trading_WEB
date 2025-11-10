@@ -1,8 +1,26 @@
+import { useAppContext } from "../../context/AppContext";
+import PostCard from "./PostCard";
+
 const ContentAdmin = () => {
+  const { user, posts, editPost, deletePost } = useAppContext();
+
+  if (!user) return <p>Loading...</p>;
+
+  // filter เฉพาะหมวด news
+  const newsPosts = posts.filter((p) => p.cegegory === "news");
+
   return (
-    <div>
-      <h1 className="text-4xl font-bold mb-4">หมวดหมู่ข่าวสาร</h1>
-      <p>อัพเดทข่าวสารล่าสุดจากชุมชนและทีมงาน</p>
+    <div className="flex flex-col w-full gap-6">
+      {newsPosts.map((post) => (
+        <PostCard
+          key={post.id}
+          post={post}
+          currentUser={user}
+          onDelete={deletePost}
+          onUpdate={editPost}
+          setPosts={() => {}}
+        />
+      ))}
     </div>
   );
 };

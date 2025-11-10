@@ -1,10 +1,28 @@
-const ContextUser = () => {
+import { useAppContext } from "../../context/AppContext";
+import PostCard from "./PostCard";
+
+const ContentUser = () => {
+  const { user, posts, editPost, deletePost } = useAppContext();
+
+  if (!user) return <p>Loading...</p>;
+
+  // filter เฉพาะหมวด general
+  const generalPosts = posts.filter((p) => p.cegegory === "general");
+
   return (
-    <div>
-      <h1 className="text-4xl font-bold mb-4">หมวดหมู่ทั่วไป</h1>
-      <p>ผู้ใช้แชรืประสบการ์ณและพูดควย</p>
+    <div className="flex flex-col w-full gap-6">
+      {generalPosts.map((post) => (
+        <PostCard
+          key={post.id}
+          post={post}
+          currentUser={user}
+          onDelete={deletePost}
+          onUpdate={editPost}
+          setPosts={() => {}}
+        />
+      ))}
     </div>
   );
 };
 
-export default ContextUser;
+export default ContentUser;
