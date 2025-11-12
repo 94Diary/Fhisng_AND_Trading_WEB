@@ -11,8 +11,11 @@ import Login from './components/PROFILE/login';
 import RegisterPage from './components/PROFILE/RegisterPage';
 import UserHome from './components/user/userHOME/UserHome';
 import CategoryList from './components/WEBBOARD/CategoryList';
+import CategoryListG from './components/GALLERY/CategoryList';
 import ContentAdmin from './components/WEBBOARD/ContentAdmin';
 import ContentUser from './components/WEBBOARD/ContentUser';
+import ContentAdminG from './components/GALLERY/ContentAdmin';
+import ContentUserG from './components/GALLERY/ContentUser';
 
 function App() {
   return (
@@ -41,7 +44,13 @@ function App() {
               <Route path="general" element={<ContentUser />} />
             </Route>
 
-            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/gallery" element={<Gallery />}> 
+              <Route index element={<CategoryListG/>} /> {/* แสดง list ตอนยังไม่กด */}
+              <Route path="news" element={<ContentAdminG />} />
+              <Route path="general" element={<ContentUserG />} />
+            </Route>
+
+
             <Route path="/profile" element={<Profile />} />
 
             <Route path="/CheckIn" element={<CheckIn />} />

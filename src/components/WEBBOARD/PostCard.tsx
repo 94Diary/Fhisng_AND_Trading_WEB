@@ -18,7 +18,6 @@ const PostCard: React.FC<PostCardProps> = ({ post, currentUser, onDelete, onUpda
   const isOwner = currentUser?.username === post.author;
   const isAdmin = currentUser?.role === "admin";
 
-
   const handleEdit = () => {
     const newTitle = prompt("แก้ไขหัวข้อ:", post.title);
     const newDesc = prompt("แก้ไขเนื้อหา:", post.description);
