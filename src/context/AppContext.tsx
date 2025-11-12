@@ -128,12 +128,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
-  const deletePost = (id: number) => {
-    if (!user) return;
-    setPosts(prev =>
-      prev.filter(p => user.role === "admin" || p.author === user.username)
-    );
-  };
+ const deletePost = (id: number) => {
+  if (!user) return;
+
+  setPosts(prev =>
+    prev.filter(p => {
+      // Admin สามารถลบทุกโพสต์
+      if (user.role === "admin") return p.id !== id;
+
+      // User ลบได้เฉพาะโพสต์ตัวเอง
+      if (p.author === user.username) return p.id !== id;
+
+      // โพสต์อื่น ๆ ไม่ให้ลบ
+      return true;
+    })
+  );
+};
+
 
   const likePost = (id: number) => {
     setPosts(prev =>

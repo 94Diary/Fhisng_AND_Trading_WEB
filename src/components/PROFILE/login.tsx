@@ -16,7 +16,7 @@ const Login = () => {
     const success = login(username, password); //  ใช้ระบบจาก context
     if (success) {
       const user = JSON.parse(localStorage.getItem("user")!);
-      if (user.role === "admin") navigate("/admin/adminHome");
+      if (user.role === "admin") navigate("/user/userHome");
       else navigate("/user/userHome");
     } else {
       setError("Username หรือ Password ไม่ถูกต้อง");

@@ -10,7 +10,6 @@ import Footer from "./components/Footer";
 import Login from './components/PROFILE/login';
 import RegisterPage from './components/PROFILE/RegisterPage';
 import UserHome from './components/user/userHOME/UserHome';
-import AdminHome from './components/admin/adminHOME/AdminHome';
 import CategoryList from './components/WEBBOARD/CategoryList';
 import ContentAdmin from './components/WEBBOARD/ContentAdmin';
 import ContentUser from './components/WEBBOARD/ContentUser';
@@ -44,8 +43,6 @@ function App() {
 
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/profile" element={<Profile />} />
-
-            <Route path="/admin/adminHome" element={<AdminHome />}/>
 
             <Route path="/CheckIn" element={<CheckIn />} />
             <Route path="/PROFILE/login" element={<Login />} />
