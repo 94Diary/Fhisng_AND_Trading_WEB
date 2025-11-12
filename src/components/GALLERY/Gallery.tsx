@@ -9,51 +9,55 @@ const Gallery = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // current category
-  const currentCategory = location.pathname.replace("/gallery/", "");
-
-  // show buttons only if inside a category
-  const showButtons = currentCategory !== "/gallery";
-
-  // modal create post
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+
+  const currentCategory = location.pathname.replace("/gallery/", "");
 
   const handleSubmit = () => {
-    if (!title || !description || !imageFile) {
-      alert("กรุณากรอกทุกช่องและเลือกภาพ!");
+    if (!title || !description || imageFiles.length === 0) {
+      alert("กรุณากรอกหัวข้อ เนื้อหา และเลือกภาพอย่างน้อย 1 รูป!");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const imageUrl = reader.result as string;
-      addGalleryPost(title, description, imageUrl, currentCategory);
+
+    if (imageFiles.length > 5) {
+      alert("เลือกได้สูงสุด 5 รูปเท่านั้น");
+      return;
+    }
+
+    // อ่านไฟล์ทุกอันและสร้าง array ของ URL
+    const readerPromises = imageFiles.map(
+      (file) =>
+        new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = () => reject();
+          reader.readAsDataURL(file);
+        })
+    );
+
+    Promise.all(readerPromises).then((urls) => {
+      addGalleryPost(title, description, urls, currentCategory);
       setTitle("");
       setDescription("");
-      setImageFile(null);
+      setImageFiles([]);
       setShowCreateModal(false);
-    };
-    reader.readAsDataURL(imageFile);
+    });
   };
-
-  const handleBack = () => navigate("/gallery");
 
   return (
     <div className="mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen p-6">
       {/* ปุ่ม Create / Back */}
-      {showButtons && (
+      {location.pathname !== "/gallery" && (
         <div className="flex justify-end w-[90%] mb-4 gap-4">
-          {/* Create button: user ไม่เห็นใน news */}
-          {!(currentCategory === "news" && user?.role === "user") && (
+          {user?.role !== "user" || currentCategory !== "news" ? (
             <Buttons variant="create" onClick={() => setShowCreateModal(true)}>
               Create Gallery Post
             </Buttons>
-          )}
-
-          {/* Back button */}
-          <Buttons variant="back" onClick={handleBack}>
+          ) : null}
+          <Buttons variant="back" onClick={() => navigate("/gallery")}>
             Back to category
           </Buttons>
         </div>
@@ -80,7 +84,12 @@ const Gallery = () => {
             <input
               type="file"
               accept="image/*"
-              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+              multiple
+              onChange={(e) => {
+                const files = e.target.files;
+                if (!files) return;
+                setImageFiles(Array.from(files).slice(0, 5)); // สูงสุด 5
+              }}
               className="text-black"
             />
             <div className="flex justify-end gap-4">

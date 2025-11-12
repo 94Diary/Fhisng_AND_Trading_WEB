@@ -33,9 +33,9 @@ export interface GalleryPost {
   id: number;
   title: string;
   description: string;
-  author: string;
   cegegory: string; // general | news
-  imageUrl: string;
+  author: string;
+  imageUrls: string[]; // แทน imageUrl
   likes: number;
   dislikes: number;
   reports: number;
@@ -44,6 +44,7 @@ export interface GalleryPost {
   reportedBy?: string[];
   comments?: Comment[];
 }
+
 
 export interface Comment {
   id: number;
@@ -214,19 +215,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // ================= Gallery =================
-  const addGalleryPost = (
-  title: string,
-  description: string,
-  imageUrl: string,
-  cegegory: string
-) => {
-  if (!user) return;
+ const addGalleryPost = (title: string, description: string, imageUrls: string[], cegegory: string) => {
   const newPost: GalleryPost = {
     id: Date.now(),
     title,
     description,
-    cegegory,       // <-- เพิ่มตรงนี้
-    imageUrl,
+    cegegory,
+    imageUrls,
     author: user.username,
     likes: 0,
     dislikes: 0,
@@ -238,7 +233,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
   setGalleryPosts(prev => [newPost, ...prev]);
 };
-
 
 
   const editGalleryPost = (id: number, title: string, description: string) => {

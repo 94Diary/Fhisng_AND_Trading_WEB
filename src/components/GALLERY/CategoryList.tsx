@@ -4,13 +4,13 @@ const CategoryList = () => {
   return (
     <>
       <Category 
-        title="หมวดหมู่ข่าวสาร"
-        description="อัพเดทข่าวสารต่างๆ ที่น่าสนใจ"
+        title="อีเวนท์เซิฟเวอร์"
+        description="กิจกรรมต่างๆ ในเซิฟเวอร์"
         to="/gallery/news"
       />
       <Category 
         title="หมวดหมู่ทั่วไป"
-        description="พูดคุยเรื่องทั่วไปที่ไม่เข้าพวก"
+        description="ผู้เล่นทุกคนสามารถลงรูปภาพได้"
         to="/gallery/general"
       />
     </>

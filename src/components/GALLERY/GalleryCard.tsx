@@ -1,3 +1,4 @@
+// src/components/GALLERY/GalleryCard.tsx
 import React, { useState } from "react";
 import type { User, GalleryPost } from "../../context/AppContext";
 import { useAppContext } from "../../context/AppContext";
@@ -10,9 +11,7 @@ interface GalleryCardProps {
 }
 
 const GalleryCard: React.FC<GalleryCardProps> = ({ post, currentUser, onDelete, onUpdate }) => {
-  const { likeGalleryPost, dislikeGalleryPost, reportGalleryPost, addGalleryComment } =
-    useAppContext();
-
+  const { likeGalleryPost, dislikeGalleryPost, reportGalleryPost, addGalleryComment } = useAppContext();
   const [menuOpen, setMenuOpen] = useState(false);
   const [commentText, setCommentText] = useState("");
 
@@ -50,9 +49,14 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ post, currentUser, onDelete, 
       </div>
 
       <p className="text-gray-300">{post.description}</p>
-      {post.imageUrl && (
-        <img src={post.imageUrl} alt={post.title} className="rounded-md max-h-64 object-cover" />
-      )}
+
+      {/* แสดงหลายรูป */}
+      <div className="flex flex-wrap gap-2">
+        {post.imageUrls.map((url, i) => (
+          <img key={i} src={url} alt={`img-${i}`} className="rounded-md max-h-64 object-cover" />
+        ))}
+      </div>
+
       <p className="text-sm text-gray-400">โดย {post.author}</p>
 
       <div className="flex gap-4 text-lg">
@@ -61,6 +65,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ post, currentUser, onDelete, 
         <button onClick={() => reportGalleryPost(post.id)}>🚨 {post.reports}</button>
       </div>
 
+      {/* Comment Section */}
       <div className="flex flex-col gap-2 mt-4">
         <h3 className="font-bold">คอมเมนต์</h3>
         {post.comments?.map((c) => (
