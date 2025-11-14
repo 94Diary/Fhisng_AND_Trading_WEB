@@ -1,4 +1,4 @@
-import Content from "./Content";
+import CreateContent from "./CreateContent";
 import Code from "./CreateCode";
 import Buttons from "../Buttons/Buttons";
 import { Link, useNavigate } from "react-router-dom";
@@ -40,11 +40,7 @@ const Home = () => {
         {/* Bottom Center - Content Section */}
         <div className="flex-1 bg-gray-800 rounded-3xl shadow-xl p-6 overflow-auto hover:scale-105 transition-transform duration-300">
           <h2 className="text-3xl font-bold mb-4">Content</h2>
-          <Content
-            imageUrl="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSgQJolH1qSi-mDOWfYmceIBY6Bjf2sxUlI026bF3FtyV5_75tzIZz3Vd7kK3xVW5iKCjM1D_nIJ7WNZUjtIxBNVVX0IMuSdrIN2ImOww"
-            title="Welcome to the Home Page"
-            description="สวัสดี ยินดีต้อนรับสู่หน้าแรกของเว็บไซต์ของเรา..."
-          />
+          <CreateContent />
         </div>
       </div>
 

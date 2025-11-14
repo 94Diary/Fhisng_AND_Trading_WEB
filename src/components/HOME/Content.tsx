@@ -1,24 +1,60 @@
-import { useState } from "react";
+// Content.tsx
+import React, { useState } from "react";
 
 interface ContentProps {
+  id?: number;
   title: string;
   description: string;
-  imageUrl?: string;
+  imageUrls?: string[];
+  onDelete?: (id: number) => void; // สำหรับแอดมินลบ
 }
 
-const Content: React.FC<ContentProps> = ({ title, description, imageUrl }) => {
+const Content: React.FC<ContentProps> = ({ id, title, description, imageUrls = [], onDelete }) => {
   const [showFull, setShowFull] = useState(false);
-  const preview = description.length > 150 ? description.slice(0, 150) + "..." : description;
+
+  // ตัดข้อความทุก 70 ตัวเพื่อไม่ให้ทะลุกรอบ
+  const formatDescription = (text: string) => {
+    const chunks = text.match(/.{1,70}/g) || [];
+    return chunks.join("\n");
+  };
+
+  const previewDesc = formatDescription(description.slice(0, 100));
+  const fullDesc = formatDescription(description);
 
   return (
     <div
-      className="relative max-w-4xl mx-auto m-5 p-6 bg-gray-900 text-white text-2xl shadow-lg rounded-3xl cursor-pointer hover:scale-105 transition"
+      className="relative max-w-4xl mx-auto my-4 p-6 bg-gray-900 text-white rounded-3xl shadow-lg cursor-pointer hover:scale-105 transition"
       onClick={() => setShowFull(!showFull)}
     >
-      <h1 className="font-bold text-3xl mb-3">{title}</h1>
-      <p>{showFull ? description : preview}</p>
-      {imageUrl && <img src={imageUrl} className="mt-4 w-full rounded-lg object-cover max-h-96" />}
-      {!showFull && description.length > 150 && <p className="mt-2 text-sm text-gray-400">Click to read more</p>}
+      <h1 className="font-bold text-2xl mb-2">{title}</h1>
+      <p className="whitespace-pre-line">{showFull ? fullDesc : previewDesc}</p>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
+        {imageUrls.map((url, idx) => (
+          <img
+            key={idx}
+            src={url}
+            className="w-full h-24 object-cover rounded cursor-pointer"
+            onClick={(e) => window.open(url, "_blank")}
+          />
+        ))}
+      </div>
+
+      {!showFull && description.length > 100 && (
+        <p className="mt-2 text-sm text-gray-400">Click to read more</p>
+      )}
+
+      {onDelete && id !== undefined && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(id);
+          }}
+          className="absolute top-2 right-2 bg-red-500 rounded px-2 py-1 text-white text-sm hover:bg-red-700"
+        >
+          Delete
+        </button>
+      )}
     </div>
   );
 };
