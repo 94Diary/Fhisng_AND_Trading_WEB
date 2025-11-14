@@ -1,7 +1,5 @@
-import { MdOutlineReadMore } from "react-icons/md";
+import { useState } from "react";
 
-
-// components/HOME/Content.tsx
 interface ContentProps {
   title: string;
   description: string;
@@ -9,27 +7,20 @@ interface ContentProps {
 }
 
 const Content: React.FC<ContentProps> = ({ title, description, imageUrl }) => {
+  const [showFull, setShowFull] = useState(false);
+  const preview = description.length > 150 ? description.slice(0, 150) + "..." : description;
+
   return (
-    <div className="relative max-w-4xl mx-auto m-10 p-10 bg-gray-900 text-white text-2xl shadow-3lg shadow-black max-h-100 transition hover:shadow-2xl hover:shadow-black  hover:scale-110 overflow-auto rounded-3xl flex flex-col active:scale-75 group">
-    <div className="relative z-10 flex flex-col">
-      <h1 className="font-bold text-5xl mb-4">{title}</h1>
-      <p className="mb-4">{description}</p>
-      {imageUrl && (
-        <img
-          src={imageUrl}
-          alt={title}
-          className="mt-4 rounded-lg w-full object-cover max-h-100"
-        />
-      )}
+    <div
+      className="relative max-w-4xl mx-auto m-5 p-6 bg-gray-900 text-white text-2xl shadow-lg rounded-3xl cursor-pointer hover:scale-105 transition"
+      onClick={() => setShowFull(!showFull)}
+    >
+      <h1 className="font-bold text-3xl mb-3">{title}</h1>
+      <p>{showFull ? description : preview}</p>
+      {imageUrl && <img src={imageUrl} className="mt-4 w-full rounded-lg object-cover max-h-96" />}
+      {!showFull && description.length > 150 && <p className="mt-2 text-sm text-gray-400">Click to read more</p>}
     </div>
-
-    <div className="absolute  bg-black/55 inset-0 flex items-center justify-center text-white text-9xl transition-opacity duration-300 opacity-0 group-hover:opacity-100 z-20 cursor-pointer ">
-      <MdOutlineReadMore />
-    </div>
-    </div>
-
-
-  )
-}
+  );
+};
 
 export default Content;

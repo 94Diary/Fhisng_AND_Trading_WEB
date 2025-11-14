@@ -7,6 +7,13 @@ export interface User {
   role: "admin" | "user";
 }
 
+export interface CodeItem {
+  id: number;
+  title: string;
+  checkedBy: string[];
+}
+
+
 export interface Comment {
   id: number;
   author: string;
@@ -83,12 +90,16 @@ const AppContext = createContext<AppContextType | null>(null);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [codes, setCodes] = useState<CodeItem[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
   const [galleryPosts, setGalleryPosts] = useState<GalleryPost[]>([]);
 
   // ===== Load from localStorage =====
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+    const storedCodes = localStorage.getItem("codes");
+    if (storedCodes) setCodes(JSON.parse(storedCodes));
+
     if (storedUser) setUser(JSON.parse(storedUser));
 
     const storedPosts = localStorage.getItem("posts");
@@ -105,6 +116,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     localStorage.setItem("galleryPosts", JSON.stringify(galleryPosts));
   }, [galleryPosts]);
+
+  useEffect(() => {
+  localStorage.setItem("codes", JSON.stringify(codes));
+  }, [codes]);
+
 
   // ================= Auth =================
   const login = (username: string, password: string): boolean => {
@@ -124,7 +140,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.removeItem("user");
     setUser(null);
   };
+  const addCode = (title: string) => {
+  if (!user || user.role !== "admin") return;
 
+  const newCode: CodeItem = {
+    id: Date.now(),
+    title,
+    checkedBy: [],
+  };
+
+  setCodes(prev => [newCode, ...prev]);
+};
+
+const toggleCodeCheck = (id: number) => {
+  if (!user) return;
+
+  setCodes(prev =>
+    prev.map(c =>
+      c.id === id
+        ? {
+            ...c,
+            checkedBy: c.checkedBy.includes(user.username)
+              ? c.checkedBy.filter(u => u !== user.username)
+              : [...c.checkedBy, user.username],
+          }
+        : c
+    )
+  );
+};
+
+  
   // ================= WebBoard =================
   const addPost = (title: string, description: string, cegegory: string) => {
     if (!user) return;
@@ -331,6 +376,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         dislikeGalleryPost,
         reportGalleryPost,
         addGalleryComment,
+        codes,       
+        addCode,
+        toggleCodeCheck,
       }}
     >
       {children}

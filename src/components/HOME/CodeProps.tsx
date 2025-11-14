@@ -1,26 +1,22 @@
-// Code.tsx
-import { useState } from "react";
-
 interface CardCodeProps {
   title: string;
+  checkedBy: string[];
+  onToggle: () => void;
+  username: string | null;
 }
 
-const CodeProps: React.FC<CardCodeProps> = ({ title }) => {
-  const [checked, setChecked] = useState(false);
+const CodeProps: React.FC<CardCodeProps> = ({ title, checkedBy, onToggle, username }) => {
+  const checked = username ? checkedBy.includes(username) : false;
 
   return (
-    <div className="max-w-4xl mx-auto mt-6 p-2 bg-gray-800 text-white text-2xl rounded-lg shadow-lg">
-      <label className="flex items-center gap-4 cursor-pointer p-2 rounded">
-        {/* Checkbox */}
-        <input
-          type="checkbox"
-          className="w-6 h-6 text-blue-500 bg-gray-700 border-gray-500 rounded hover:scale-125"
-          checked={checked}
-          onChange={() => setChecked(!checked)}
-        />
-        {/* Title */}
-        <span>{title}</span>
-      </label>
+    <div className="bg-gray-800 text-white rounded-xl shadow-md p-3 mb-2 flex items-center gap-4 cursor-pointer hover:scale-105 transition-transform">
+      <input
+        type="checkbox"
+        className="w-5 h-5 text-blue-500 bg-gray-700 border-gray-500 rounded"
+        checked={checked}
+        onChange={onToggle}
+      />
+      <span className="text-lg">{title}</span>
     </div>
   );
 };
