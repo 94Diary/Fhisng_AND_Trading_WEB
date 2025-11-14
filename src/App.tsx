@@ -9,7 +9,6 @@ import CheckIn from './components/PROFILE/CheckIn';
 import Footer from "./components/Footer";
 import Login from './components/PROFILE/login';
 import RegisterPage from './components/PROFILE/RegisterPage';
-import UserHome from './components/user/userHOME/UserHome';
 import CategoryList from './components/WEBBOARD/CategoryList';
 import CategoryListG from './components/GALLERY/CategoryList';
 import ContentAdmin from './components/WEBBOARD/ContentAdmin';
@@ -56,7 +55,6 @@ function App() {
             <Route path="/CheckIn" element={<CheckIn />} />
             <Route path="/PROFILE/login" element={<Login />} />
             <Route path="/PROFILE/RegisterPage" element={<RegisterPage />} />
-            <Route path="/user/userHome" element={<UserHome />} />
           </Routes>
         </div>
 

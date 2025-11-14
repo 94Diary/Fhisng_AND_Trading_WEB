@@ -60,12 +60,16 @@ const Home = () => {
           </div>
         ) : (
           <div className="flex flex-col gap-4 justify-center items-center m-4 bg-gray-800/60 p-5 text-red-500 rounded-3xl">
-            <Buttons variant="login">
-              <Link to="/PROFILE/Login">Login</Link>
-            </Buttons>
-            <Buttons variant="register">
-              <Link to="/PROFILE/RegisterPage">Register</Link>
-            </Buttons>
+              <Link className="w-full" to="/PROFILE/Login">
+              <Buttons variant="login">
+                Login
+              </Buttons>
+              </Link>
+            <Link className="w-full" to="/PROFILE/RegisterPage">
+              <Buttons variant="register">
+                Register
+              </Buttons>
+              </Link>
           </div>
         )}
 
