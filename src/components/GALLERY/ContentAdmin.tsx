@@ -1,24 +1,21 @@
 import { useAppContext } from "../../context/AppContext";
-import PostCard from "./PostCard";
+import GalleryCard from "./GalleryCard";
 
 const ContentAdmin = () => {
-  const { user, posts, editPost, deletePost } = useAppContext();
-
+  const { user, galleryPosts, editGalleryPost, deleteGalleryPost } = useAppContext();
   if (!user) return <p>Loading...</p>;
 
-  // filter เฉพาะหมวด news
-  const newsPosts = posts.filter((p) => p.cegegory === "news");
+  const newsPosts = galleryPosts.filter((p) => p.cegegory === "news");
 
   return (
     <div className="flex flex-col w-full gap-6">
       {newsPosts.map((post) => (
-        <PostCard
+        <GalleryCard
           key={post.id}
           post={post}
           currentUser={user}
-          onDelete={deletePost}
-          onUpdate={editPost}
-          setPosts={() => {}}
+          onDelete={deleteGalleryPost}
+          onUpdate={editGalleryPost}
         />
       ))}
     </div>

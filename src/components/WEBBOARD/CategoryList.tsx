@@ -1,4 +1,4 @@
-import Category from "./Category";
+import Category from "../Buttons/Category";
 
 const CategoryList = () => {
   return (

@@ -12,7 +12,7 @@ const Category: React.FC<CategoryProps> = ({ title, description, to }) => {
       to={to}
       className="w-full max-w-6xl bg-gray-700 hover:bg-gray-600 hover:scale-[1.02]
                 text-white text-2xl rounded-lg shadow-lg 
-                 max-h-96 overflow-auto flex flex-col gap-4 cursor-pointer p-10"
+                 max-h-96 overflow-auto flex flex-col gap-4 cursor-pointer p-10 text-center"
     >
       <h1 className="font-bold text-5xl mb-4">{title}</h1>
       <p className="mb-4 text-gray-300">{description}</p>

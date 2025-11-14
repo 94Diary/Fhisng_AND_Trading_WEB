@@ -10,10 +10,12 @@ import Footer from "./components/Footer";
 import Login from './components/PROFILE/login';
 import RegisterPage from './components/PROFILE/RegisterPage';
 import UserHome from './components/user/userHOME/UserHome';
-import AdminHome from './components/admin/adminHOME/AdminHome';
 import CategoryList from './components/WEBBOARD/CategoryList';
+import CategoryListG from './components/GALLERY/CategoryList';
 import ContentAdmin from './components/WEBBOARD/ContentAdmin';
 import ContentUser from './components/WEBBOARD/ContentUser';
+import ContentAdminG from './components/GALLERY/ContentAdmin';
+import ContentUserG from './components/GALLERY/ContentUser';
 
 function App() {
   return (
@@ -42,10 +44,14 @@ function App() {
               <Route path="general" element={<ContentUser />} />
             </Route>
 
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/gallery" element={<Gallery />}> 
+              <Route index element={<CategoryListG/>} /> {/* แสดง list ตอนยังไม่กด */}
+              <Route path="news" element={<ContentAdminG />} />
+              <Route path="general" element={<ContentUserG />} />
+            </Route>
 
-            <Route path="/admin/adminHome" element={<AdminHome />}/>
+
+            <Route path="/profile" element={<Profile />} />
 
             <Route path="/CheckIn" element={<CheckIn />} />
             <Route path="/PROFILE/login" element={<Login />} />
