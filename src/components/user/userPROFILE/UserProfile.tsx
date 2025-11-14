@@ -1,6 +1,6 @@
 import React, {useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import Buttons from "../Buttons/Buttons";
+import Buttons from "../../Buttons/Buttons";
 
 const Profile = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
