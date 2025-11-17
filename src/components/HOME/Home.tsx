@@ -45,7 +45,7 @@ const Home = () => {
       </div>
 
       {/* Right Panel */}
-      <div className="w-1/5 flex flex-col gap-6">
+      <div className="w-1/5 h-[900px] flex flex-col gap-6">
         {username ? (
           <div className="flex flex-col gap-4 justify-center items-center m-4 bg-gray-800/70 p-6 rounded-3xl shadow-lg">
             <p className="text-lg font-semibold">👋 สวัสดี {username}</p>

@@ -9,7 +9,7 @@ const CodeProps: React.FC<CardCodeProps> = ({ title, checkedBy, onToggle, userna
   const checked = username ? checkedBy.includes(username) : false;
 
   return (
-    <div className="bg-gray-800 text-white rounded-xl shadow-md p-3 mb-2 flex items-center gap-4 cursor-pointer hover:scale-105 transition-transform">
+    <div className="bg-gray-800 text-white rounded-xl shadow-md p-3 mb-2 flex items-center gap-4 cursor-pointer ">
       <input
         type="checkbox"
         className="w-5 h-5 text-blue-500 bg-gray-700 border-gray-500 rounded"

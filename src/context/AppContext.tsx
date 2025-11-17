@@ -42,7 +42,7 @@ export interface GalleryPost {
   description: string;
   cegegory: string; // general | news
   author: string;
-  imageUrls: string[]; // แทน imageUrl
+  imageUrls: string; // แทน imageUrl
   likes: number;
   dislikes: number;
   reports: number;
@@ -260,7 +260,7 @@ const toggleCodeCheck = (id: number) => {
   };
 
   // ================= Gallery =================
- const addGalleryPost = (title: string, description: string, imageUrls: string[], cegegory: string) => {
+ const addGalleryPost = (title: string, description: string, imageUrls: string, cegegory: string) => {
   const newPost: GalleryPost = {
     id: Date.now(),
     title,
