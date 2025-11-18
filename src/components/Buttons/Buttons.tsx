@@ -1,6 +1,6 @@
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'checkIn' | 'profileCom' | 'logout' | 'history' | 'create' | 'login' | 'register' ;
+    variant?: 'checkIn' | 'profileCom' | 'logout' | 'history' | 'create' | 'login' | 'register' | 'back' ;
     size?: 'sm' | 'md' | 'lg';
     children: React.ReactNode;
     to?: string
@@ -81,6 +81,15 @@ const Buttons: React.FC<ButtonProps> = ({
             `;
             break;
 
+        case 'back' : 
+            variantStyles = `
+                bg-blue-500 px-6 py-3 rounded-lg text-lg font-[700]  
+                hover:bg-gradient-to-r from-[#37D5D6] to-[#36096D] hover:scale-110  transition
+                shadow-lg shadow-black hover:shadow-green-900 transition cursor-pointer
+                active:scale-50 active:transitive
+            `;
+            break;
+
         case 'register':
             variantStyles = `
                 bg-white text-black w-full rounded-lg font-[700]
@@ -90,14 +99,7 @@ const Buttons: React.FC<ButtonProps> = ({
             `;
             break;
 
-        case 'back':
-            variantStyles = `
-                bg-blue-500 px-6 py-3 rounded-lg text-lg font-[700]  
-                hover:bg-gradient-to-r from-[#37D5D6] to-[#36096D] hover:scale-110  transition
-                shadow-lg shadow-black hover:shadow-green-900 transition cursor-pointer
-                active:scale-50 active:transitive
-            `;
-            break;
+        
 
         default:
             break;
