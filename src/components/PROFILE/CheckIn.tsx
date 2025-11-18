@@ -62,16 +62,16 @@ const CheckIn = () => {
           
           <div className="px-4 py-1 rounded-lg font-bold shadow">Name</div>
           {/* ปุ่มเมนู*/}
-          <Buttons variant="profileCom">
-            <Link to="/Profile">
-            Profile
-            </Link>
-          </Buttons>
-          <Buttons variant="profileCom">
-            <Link to="/CheckIn">
-            Check-In
-            </Link>
-          </Buttons>
+          <Link className="w-full" to="/Profile">
+            <Buttons variant="profileCom">
+              Profile
+            </Buttons>
+          </Link>
+          <Link className="w-full" to="/CheckIn">
+            <Buttons variant="profileCom">
+              Check_IN
+            </Buttons>
+          </Link>
           {/* ปุ่มออกจากระบบ*/}
           <Buttons variant="logout">Log-Out</Buttons>
         </div>

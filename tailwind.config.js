@@ -1,9 +1,9 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+exports.default = {
   content: ["./src/**/*.{html,js,ts,jsx,tsx}"],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("@midudev/tailwind-animations","tailwindcss-animate","tailwindcss-motion"),],
 }
 

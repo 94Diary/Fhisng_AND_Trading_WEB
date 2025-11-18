@@ -1,10 +1,35 @@
-import React, {useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import React, {useRef, useState, useEffect } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Buttons from "../Buttons/Buttons";
+import { Home, LogIn } from "lucide-react";
 
 const Profile = () => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
+  const [username, setUsername] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+  const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+      // ดึงข้อมูลจาก localStorage ทุกครั้งที่เปิดหน้านี้
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        setUsername(user.username);
+        setRole(user.role);
+      } else {
+        setShowPopup(true); //ถ้าไม่ได้ล็อคอินจะขึ้น ป๊อบอัพขึ้นมา
+      }
+    }, [navigate]);
+  
+    const handleLogout = () => {
+      localStorage.removeItem("user");
+      setUsername(null);
+      setRole(null);
+      navigate("/");
+    };
 
   // ฟังก์ชันเมื่อเลือกไฟล์
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,8 +45,30 @@ const Profile = () => {
     fileInputRef.current?.click(); // trigger ให้เปิด file picker
   };
 
+  if (!username) {return (
+    <>
+      {showPopup && (
+      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 ">
+        <div className="bg-gray-800 p-8 rounded-2xl text-center w-[350px] shadow-xl animate-pop">
+          <h2 className="text-2xl font-bold mb-4 text-white motion-preset-bounce">คุณต้องล็อคอินก่อน</h2>
+          <p className="text-gray-300 mb-6">กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้านี้</p>
+          <button
+            onClick={() => navigate("/Profile/Login")}
+            className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl text-white font-semibold"
+          >
+            ไปหน้า Login
+          </button>
+        </div>
+      </div>
+    
+  )}
+  </>
+  )}
+  
   return (
+
     <div className=" mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen p-6">
+      
       <div className="flex w-[90%] gap-6">
         
         {/* กล่องด้านซ้าย */}
@@ -49,20 +96,20 @@ const Profile = () => {
             className="hidden"
           />
           
-          <div className="px-4 py-1 font-bold shadow">Name</div>
+          <div className="px-4 py-1 font-bold shadow">{username}</div>
           {/* ปุ่มเมนู*/}
-          <Buttons variant="profileCom">
-            <Link to="/Profile">
-            Profile
-            </Link>
-          </Buttons>
-          <Buttons variant="profileCom">
-            <Link to="/CheckIn">
-            Check-In
-            </Link>
-          </Buttons>
+          <Link className="w-full" to="/Profile">
+            <Buttons variant="profileCom">
+              Profile
+            </Buttons>
+          </Link>
+          <Link className="w-full" to="/CheckIn">
+            <Buttons variant="profileCom">
+              Check_IN
+            </Buttons>
+          </Link>
           {/* ปุ่มออกจากระบบ*/}
-          <Buttons variant="logout">Log-Out</Buttons>
+          <Buttons variant="logout" onClick={handleLogout}>Log-Out</Buttons>
         </div>
 
         {/* กล่องด้านขวา (หมวดหมู่) */}
@@ -70,13 +117,16 @@ const Profile = () => {
             <h2 className="text-3xl font-bold">Accout Info</h2>
             <div className="space-y-3">
               <p>
-                Display Name: <span className="font-semibold">DuckOneMandown</span>
+                Display Name: <span className="font-semibold">{username}</span>
               </p>
               <p>
-                UserName: <span className="font-semibold">DuckOneMandown</span>
+                UserName: <span className="font-semibold">{username}</span>
               </p>
               <p>
-                Email: <span className="font-semibold">Duck@gmail.com</span>
+                Role: <span className="font-semibold">{role}</span>
+              </p>
+              <p>
+                Email: <span className="font-semibold">{email}</span>
               </p>
             </div>
           </div>
