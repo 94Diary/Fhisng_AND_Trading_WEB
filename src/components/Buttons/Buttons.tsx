@@ -27,10 +27,9 @@ const Buttons: React.FC<ButtonProps> = ({
     switch (variant) {
         case 'checkIn':
             variantStyles = `
-                bg-green-500 text-white border-white
-                hover:bg-green-700 hover:border-black-500 hover:scale-125
-                focus:ring-4 focus:ring-green-300 focus:ring-opacity-50
-                shadow-lg hover:shadow-xl transition duration-300 cursor-pointer
+                bg-white text-black border-black-2xl w-[10%]
+                hover:bg-black hover:border-white hover:scale-110 hover:text-white
+                shadow-2xl shadow-black hover:shadow-xl transition duration-300  cursor-pointer
                 active:scale-50 active:transition active:bg-gray-700
             `;
             break;
@@ -73,7 +72,7 @@ const Buttons: React.FC<ButtonProps> = ({
         
         case 'login':
             variantStyles = `
-                bg-green-500 text-white w-full rounded-2lg font-[700]
+                bg-green-500 text-white pt-0 pb-0 pl-0 pr-0 h-10 w-full rounded-2lg font-[700]
                 hover:bg-gradient-to-r from-[#37D5D6] to-[#36096D] hover:scale-125  transition
                 hover:shadow-lg shadow-lg shadow-black hover:shadow-purple-400 cursor-pointer
                 active:scale-50 active:transitive

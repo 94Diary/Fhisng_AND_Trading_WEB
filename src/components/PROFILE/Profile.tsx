@@ -6,6 +6,8 @@ import { useAppContext } from "../../context/AppContext";
 const Profile = () => {
   const { user, profileImages, addProfileImage } = useAppContext();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
@@ -21,7 +23,11 @@ const Profile = () => {
   }, [user, profileImages]);
 
   const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUsername(null);
+    setRole(null);
     navigate("/");
+    window.location.reload
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,12 +44,12 @@ const Profile = () => {
 
   const handleImageClick = () => fileInputRef.current?.click();
 
-  if (!user) {
+  if (!user?.username) {
     return (
       <>
         {showPopup && (
           <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-            <div className="bg-gray-800 p-8 rounded-2xl text-center w-[350px] shadow-xl animate-pop">
+            <div className="bg-gray-800 p-8 rounded-2xl text-center w-[350px] shadow-xl">
               <h2 className="text-2xl font-bold mb-4 text-white">คุณต้องล็อคอินก่อน</h2>
               <p className="text-gray-300 mb-6">กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้านี้</p>
               <button
@@ -96,9 +102,11 @@ const Profile = () => {
             <Buttons variant="profileCom">Check_IN</Buttons>
           </Link>
 
-          <Buttons variant="logout" onClick={handleLogout}>
-            Log-Out
-          </Buttons>
+          <Link className="w-full mt-auto" to={"/PROFILE/login"}>
+            <Buttons variant="logout" onClick={handleLogout}>
+              Log-Out
+            </Buttons>
+          </Link>
         </div>
 
         {/* กล่องด้านขวา */}

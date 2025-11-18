@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import Buttons from "../Buttons/Buttons";
-import { Link } from "react-router-dom";
+import { Link , useNavigate  } from "react-router-dom";
 
 const CheckIn = () => {
   const { user, profileImages, checkInStatus, resetCheckIn, handleCheckIn } = useAppContext();
   const [currentImage, setCurrentImage] = useState<string | null>(null);
   const [status, setStatus] = useState<boolean[]>([]);
+  const [username, setUsername] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const [alreadyCheckInPopup, setAlreadyCheckInPopup] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
@@ -18,18 +22,53 @@ const CheckIn = () => {
     }
   }, [user, profileImages, checkInStatus]);
 
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUsername(null);
+    setRole(null);
+    window.location.reload
+    navigate("/");
+  };
+
   const handleClickCheckIn = () => {
     if (!user) return;
+    
+
+    if (checkInStatus) {
+      setAlreadyCheckInPopup(true); // เปิดป๊อบอัพ
+      return;
+    }
+
     handleCheckIn(user.username);
   };
   const handleReset = () => {
     if (user) resetCheckIn(user.username);
   };
 
-  if (!user) return <p className="text-white">คุณต้องล็อคอินก่อน</p>;
+
+  
 
   return (
+    
     <div className="mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen p-6">
+
+    {alreadyCheckInPopup && (
+      <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+        <div className="bg-gray-800 p-8 rounded-2xl shadow-xl text-center">
+          <h2 className="text-2xl font-bold mb-4 text-white">
+            วันนี้คุณเช็คอินไปแล้ว!
+          </h2>
+          <Buttons
+            variant="checkIn"
+            onClick={() => setAlreadyCheckInPopup(false)}
+          >
+            ตกลง
+          </Buttons>
+        </div>
+      </div>
+    )}
+
+
       <div className="flex w-[90%] gap-6">
         {/* กล่องซ้าย */}
         <div className="w-[25%] h-[600px] bg-gray-800 p-6 rounded-3xl flex flex-col items-center gap-6">
@@ -44,33 +83,44 @@ const CheckIn = () => {
           </div>
           <div className="px-4 py-1 font-bold shadow">{user.username}</div>
 
-          {/* ปุ่มกลับไป Profile */}
-          <Link className="w-full mt-4" to="/Profile">
+          {/* ปุ่มเมนู */}
+          <Link className="w-full" to="/Profile">
             <Buttons variant="profileCom">Profile</Buttons>
+          </Link>
+          <Link className="w-full" to="/CheckIn">
+            <Buttons variant="profileCom">Check_IN</Buttons>
+          </Link>
+          <Link className="w-full mt-auto" to={"/PROFILE/login"}>
+            <Buttons variant="logout" onClick={handleLogout}>
+              Log-Out
+            </Buttons>
           </Link>
         </div>
 
         {/* กล่องขวา */}
         <div className="w-[70%] bg-gray-800 rounded-3xl p-6 flex flex-col gap-6">
           <h2 className="text-3xl font-bold mb-4">Check-In</h2>
-          <div className="flex gap-2 mb-4">
+          <div className="grid grid-cols-4 gap-2 mb-4 ">
             {status.map((done, i) => (
               <div
                 key={i}
-                className={`w-10 h-10 flex items-center justify-center rounded-full border-2 ${
+                className={`w-auto h-20 flex items-center justify-center border-2 shadow-black shadow-2xl ${
                   done ? "bg-green-500 border-green-400" : "bg-gray-700 border-gray-400"
                 }`}
               >
-                {i + 1}
+                {i + 1} day
               </div>
             ))}
           </div>
-          <button
-            onClick={handleClickCheckIn}
-            className="px-4 py-2 bg-blue-500 rounded-xl hover:bg-blue-600"
-          >
-            Check In Today
-          </button>
+
+          <div className="flex justify-center">
+            <Buttons
+              onClick={handleClickCheckIn}
+              variant="checkIn"
+            >
+              Check In
+            </Buttons>
+          </div>
         </div>
       </div>
     </div>

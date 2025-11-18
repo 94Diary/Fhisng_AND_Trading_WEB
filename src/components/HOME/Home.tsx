@@ -10,21 +10,37 @@ const Home = () => {
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+  const storedUser = localStorage.getItem("user");
+  console.log("storedUser:", storedUser);
+  if (storedUser) {
+    try {
       const user = JSON.parse(storedUser);
-      setUsername(user.username);
-      setRole(user.role);
-    } else {
+      console.log("parsed user:", user);
+      if (user && typeof user === 'object' && user.username && user.role) {
+        setUsername(user.username);
+        setRole(user.role);
+      } else {
+        localStorage.removeItem("user");
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
+      localStorage.removeItem("user");
       navigate("/");
     }
-  }, [navigate]);
+  } else {
+    console.log("No user found, navigating to /");
+    navigate("/");
+  }
+}, [navigate]);
+
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUsername(null);
     setRole(null);
     navigate("/");
+    window.location.reload()
   };
 
   return (
@@ -56,12 +72,16 @@ const Home = () => {
           </div>
         ) : (
           <div className="flex flex-col gap-4 justify-center items-center m-4 bg-gray-800/70 p-6 rounded-3xl shadow-lg">
-            <Buttons variant="login">
-              <Link to="/PROFILE/Login">Login</Link>
-            </Buttons>
-            <Buttons variant="register">
-              <Link to="/PROFILE/RegisterPage">Register</Link>
-            </Buttons>
+            <Link className="w-full" to="/PROFILE/Login">
+              <Buttons variant="login">
+                Login
+              </Buttons>
+            </Link>
+            <Link className="w-full" to="/PROFILE/RegisterPage">
+              <Buttons variant="register">
+                Register
+              </Buttons>
+            </Link>
           </div>
         )}
 

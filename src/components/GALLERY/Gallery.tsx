@@ -1,5 +1,5 @@
 // src/components/GALLERY/Gallery.tsx
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Buttons from "../Buttons/Buttons";
 import { useAppContext } from "../../context/AppContext";
@@ -8,13 +8,19 @@ const Gallery = () => {
   const { user, addGalleryPost } = useAppContext();
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [showPopup, setShowPopup] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [imageFiles, setImageFiles] = useState<File[]>([]);
 
   const currentCategory = location.pathname.replace("/gallery/", "");
+
+  useEffect(() => {
+        if (!user) {
+          setShowPopup(true);
+        }
+      }, [user]);
 
   const handleSubmit = () => {
     if (!title || !description || imageFiles.length === 0) {
@@ -48,6 +54,28 @@ const Gallery = () => {
       setShowCreateModal(false);
     });
   };
+
+  if (!user?.username) {
+    return (
+      <>
+        {showPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+            <div className="bg-gray-800 p-8 rounded-2xl text-center w-[350px] shadow-xl">
+              <h2 className="text-2xl font-bold mb-4 text-white">คุณต้องล็อคอินก่อน</h2>
+              <p className="text-gray-300 mb-6">กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้านี้</p>
+              <button
+                onClick={() => navigate("/Profile/Login")}
+                className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl text-white font-semibold"
+              >
+                ไปหน้า Login
+              </button>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
 
   return (
     <div className="mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen p-6">
