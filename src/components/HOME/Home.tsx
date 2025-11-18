@@ -10,15 +10,30 @@ const Home = () => {
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+  const storedUser = localStorage.getItem("user");
+  console.log("storedUser:", storedUser);
+  if (storedUser) {
+    try {
       const user = JSON.parse(storedUser);
-      setUsername(user.username);
-      setRole(user.role);
-    } else {
+      console.log("parsed user:", user);
+      if (user && typeof user === 'object' && user.username && user.role) {
+        setUsername(user.username);
+        setRole(user.role);
+      } else {
+        localStorage.removeItem("user");
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
+      localStorage.removeItem("user");
       navigate("/");
     }
-  }, [navigate]);
+  } else {
+    console.log("No user found, navigating to /");
+    navigate("/");
+  }
+}, [navigate]);
+
 
   const handleLogout = () => {
     localStorage.removeItem("user");
