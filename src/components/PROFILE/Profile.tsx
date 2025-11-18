@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Buttons from "../Buttons/Buttons";
 import { useAppContext } from "../../context/AppContext";
+import { motion, AnimatePresence } from "framer-motion";
+
 
 const Profile = () => {
   const { user, profileImages, addProfileImage } = useAppContext();
@@ -46,22 +48,33 @@ const Profile = () => {
 
   if (!user?.username) {
     return (
-      <>
-        {showPopup && (
-          <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-            <div className="bg-gray-800 p-8 rounded-2xl text-center w-[350px] shadow-xl">
-              <h2 className="text-2xl font-bold mb-4 text-white">คุณต้องล็อคอินก่อน</h2>
-              <p className="text-gray-300 mb-6">กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้านี้</p>
-              <button
-                onClick={() => navigate("/Profile/Login")}
-                className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl text-white font-semibold"
+      <AnimatePresence>
+        <>
+          {showPopup && (
+            <motion.div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+              <motion.div className="bg-gray-800 p-8 rounded-2xl text-center w-[350px] shadow-xl" 
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.2,
+                ease: [0, 0.71, 0.2, 1.01],
+              }}
               >
-                ไปหน้า Login
-              </button>
-            </div>
-          </div>
-        )}
-      </>
+                <h2 className="text-2xl font-bold mb-4 text-white">คุณต้องล็อคอินก่อน</h2>
+                <p className="text-gray-300 mb-6">กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้านี้</p>
+                <button
+                  onClick={() => navigate("/Profile/Login")}
+                  className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl text-white font-semibold"
+                >
+                  ไปหน้า Login
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </>
+      </AnimatePresence>
+      
     );
   }
 

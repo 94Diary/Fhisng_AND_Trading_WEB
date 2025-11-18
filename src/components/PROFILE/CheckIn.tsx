@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import Buttons from "../Buttons/Buttons";
 import { Link , useNavigate  } from "react-router-dom";
+import { m } from "framer-motion";
 
 const CheckIn = () => {
   const { user, profileImages, checkInStatus, resetCheckIn, handleCheckIn } = useAppContext();
@@ -34,13 +35,9 @@ const CheckIn = () => {
     if (!user) return;
     
 
-    if (checkInStatus) {
-      setAlreadyCheckInPopup(true); // เปิดป๊อบอัพ
-      return;
-    }
-
     handleCheckIn(user.username);
   };
+
   const handleReset = () => {
     if (user) resetCheckIn(user.username);
   };
@@ -81,7 +78,7 @@ const CheckIn = () => {
               </div>
             )}
           </div>
-          <div className="px-4 py-1 font-bold shadow">{user.username}</div>
+          <div className="px-4 py-1 font-bold shadow">{user?.username}</div>
 
           {/* ปุ่มเมนู */}
           <Link className="w-full" to="/Profile">

@@ -23,7 +23,7 @@ const Content: React.FC<ContentProps> = ({ id, title, description, imageUrls = [
 
   return (
     <div
-      className="grid relative max-w-4xl mx-auto my-4 p-6 bg-gray-700 justify-center items-center text-white rounded-3xl shadow-lg cursor-pointer shadow-black shadow-2xl"
+      className="grid relative max-w-4xl mx-auto my-4 p-6 bg-gray-700 justify-center items-center text-white rounded-3xl cursor-pointer shadow-black shadow-2xl"
       onClick={() => setShowFull(!showFull)}
     >
       <h1 className="font-bold text-2xl mb-2">{title}</h1>

@@ -80,7 +80,7 @@ const CreateContent: React.FC = () => {
           />
           <textarea
             value={description}
-            onChange={e => setDescription(e.target.value.slice(0, 255))}
+            onChange={e => setDescription(e.target.value.slice(0, 1000))}
             placeholder="Description (255 characters max)"
             className="p-3 rounded text-black w-full"
           />

@@ -54,7 +54,7 @@ const Home = () => {
         </div>
 
         {/* Bottom Center - Content Section */}
-        <div className="flex-1 bg-gray-800 rounded-3xl shadow-xl p-6 overflow-auto hover:scale-105 transition-transform duration-300">
+        <div className="flex-1 bg-gray-800 rounded-3xl shadow-xl p-6 overflow-auto hover:scale-100 transition-transform duration-300">
           <h2 className="text-3xl font-bold mb-4">Content</h2>
           <CreateContent />
         </div>
