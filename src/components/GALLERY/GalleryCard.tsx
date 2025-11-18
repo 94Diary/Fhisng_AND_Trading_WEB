@@ -53,8 +53,13 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ post, currentUser, onDelete, 
       {/* แสดงหลายรูป */}
       <div className="flex flex-wrap gap-2">
         {post.imageUrls.map((url, i) => (
-          <img key={i} src={url} alt={`img-${i}`} className="rounded-md max-h-64 object-cover" />
-        ))}
+          <img
+            key={i}
+            src={url}
+            alt={`img-${i}`}
+            className="rounded-md max-h-64 object-cover cursor-pointer"
+            onClick={() => window.open(url, "_blank")} // เปิดรูปเต็มหน้าต่าง
+          />))}
       </div>
 
       <p className="text-sm text-gray-400">โดย {post.author}</p>

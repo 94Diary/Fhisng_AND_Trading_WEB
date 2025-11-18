@@ -7,7 +7,7 @@ const ContentAdmin = () => {
   if (!user) return <p>Loading...</p>;
 
   // filter เฉพาะหมวด news
-  const newsPosts = posts.filter((p) => p.cegegory === "news");
+  const newsPosts = posts.filter((p) => p.category === "news");
 
   return (
     <div className="flex flex-col w-full gap-6">

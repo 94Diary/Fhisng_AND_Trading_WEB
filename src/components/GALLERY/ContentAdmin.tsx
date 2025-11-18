@@ -5,7 +5,7 @@ const ContentAdmin = () => {
   const { user, galleryPosts, editGalleryPost, deleteGalleryPost } = useAppContext();
   if (!user) return <p>Loading...</p>;
 
-  const newsPosts = galleryPosts.filter((p) => p.cegegory === "news");
+  const newsPosts = galleryPosts.filter((p) => p.category === "news");
 
   return (
     <div className="flex flex-col w-full gap-6">

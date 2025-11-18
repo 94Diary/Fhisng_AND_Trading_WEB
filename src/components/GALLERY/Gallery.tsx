@@ -5,7 +5,7 @@ import Buttons from "../Buttons/Buttons";
 import { useAppContext } from "../../context/AppContext";
 
 const Gallery = () => {
-  const { user, galleryPosts, addGalleryPost } = useAppContext();
+  const { user, addGalleryPost } = useAppContext();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -37,6 +37,8 @@ const Gallery = () => {
           reader.readAsDataURL(file);
         })
     );
+
+    
 
     Promise.all(readerPromises).then((urls) => {
       addGalleryPost(title, description, urls, currentCategory);

@@ -5,7 +5,7 @@ const ContentUser = () => {
   const { user, galleryPosts, editGalleryPost, deleteGalleryPost } = useAppContext();
   if (!user) return <p>Loading...</p>;
 
-  const generalPosts = galleryPosts.filter((p) => p.cegegory === "general");
+  const generalPosts = galleryPosts.filter((p) => p.category === "general");
 
   return (
     <div className="flex flex-col w-full gap-6">

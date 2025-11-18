@@ -10,7 +10,7 @@ interface PostCardProps {
   setPosts: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post, currentUser, onDelete, onUpdate, setPosts }) => {
+const PostCard: React.FC<PostCardProps> = ({ post, currentUser, onDelete, onUpdate, }) => {
   const { addComment,likePost,dislikePost,reportPost } = useAppContext();
   const [menuOpen, setMenuOpen] = useState(false);
   const [commentText, setCommentText] = useState("");
