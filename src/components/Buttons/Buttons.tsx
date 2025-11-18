@@ -12,7 +12,6 @@ const Buttons: React.FC<ButtonProps> = ({
     size = 'md',
     className,
     disabled,
-    to,
     ...props
 }) => {
 

@@ -38,6 +38,8 @@ const Gallery = () => {
         })
     );
 
+    
+
     Promise.all(readerPromises).then((urls) => {
       addGalleryPost(title, description, urls, currentCategory);
       setTitle("");
