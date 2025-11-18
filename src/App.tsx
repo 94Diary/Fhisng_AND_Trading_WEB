@@ -28,9 +28,6 @@ function App() {
 
         {/* NavBar fixed บนสุด */}
         <NavBar />
-
-        
-
         {/* ส่วนเนื้อหาหลัก */}
         <div className="flex-1 pt-24">
           <Routes>

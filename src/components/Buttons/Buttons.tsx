@@ -1,6 +1,6 @@
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'checkIn' | 'profileCom' | 'logout' | 'history' | 'create' | 'login' | 'register' ;
+    variant?: 'checkIn' | 'profileCom' | 'logout' | 'history' | 'create' | 'login' | 'register' | 'back'   ;
     size?: 'sm' | 'md' | 'lg';
     children: React.ReactNode;
     to?: string
@@ -12,7 +12,6 @@ const Buttons: React.FC<ButtonProps> = ({
     size = 'md',
     className,
     disabled,
-    to,
     ...props
 }) => {
 
