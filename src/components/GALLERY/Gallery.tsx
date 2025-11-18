@@ -5,7 +5,7 @@ import Buttons from "../Buttons/Buttons";
 import { useAppContext } from "../../context/AppContext";
 
 const Gallery = () => {
-  const { user, galleryPosts, addGalleryPost } = useAppContext();
+  const { user, addGalleryPost } = useAppContext();
   const location = useLocation();
   const navigate = useNavigate();
 
