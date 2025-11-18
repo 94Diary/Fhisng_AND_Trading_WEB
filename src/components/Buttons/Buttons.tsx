@@ -1,7 +1,6 @@
-import React, { useState } from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: 'checkIn' | 'profileCom' | 'logout' | 'history' | 'create' | 'login' | 'register' ;
+    variant?: 'checkIn' | 'profileCom' | 'logout' | 'history' | 'create' | 'login' | 'register' | 'back' ;
     size?: 'sm' | 'md' | 'lg';
     children: React.ReactNode;
     to?: string
@@ -13,7 +12,6 @@ const Buttons: React.FC<ButtonProps> = ({
     size = 'md',
     className,
     disabled,
-    to,
     ...props
 }) => {
 
@@ -39,7 +37,7 @@ const Buttons: React.FC<ButtonProps> = ({
 
         case 'profileCom':
             variantStyles = `
-                bg-white text-black px-4 py-2 w-full rounded-lg font-[700]
+                bg-white text-black w-full  rounded-lg font-[700]
                 hover:bg-gradient-to-r from-[#37D5D6] to-[#36096D] hover:scale-110  transition 
                 hover:shadow-lg shadow-lg shadow-black hover:shadow-purple-400 cursor-pointer
                 active:scale-50 active:transitive
@@ -75,25 +73,35 @@ const Buttons: React.FC<ButtonProps> = ({
         
         case 'login':
             variantStyles = `
-                bg-green-500 text-white w-[50%] rounded-2lg font-[700]
+                bg-green-500 text-white w-full rounded-2lg font-[700]
                 hover:bg-gradient-to-r from-[#37D5D6] to-[#36096D] hover:scale-125  transition
                 hover:shadow-lg shadow-lg shadow-black hover:shadow-purple-400 cursor-pointer
+                active:scale-50 active:transitive
+            `;
+            break;
+
+        case 'back' : 
+            variantStyles = `
+                bg-blue-500 px-6 py-3 rounded-lg text-lg font-[700]  
+                hover:bg-gradient-to-r from-[#37D5D6] to-[#36096D] hover:scale-110  transition
+                shadow-lg shadow-black hover:shadow-green-900 transition cursor-pointer
                 active:scale-50 active:transitive
             `;
             break;
 
         case 'register':
             variantStyles = `
-                bg-white text-black w-[50%] rounded-lg font-[700]
+                bg-white text-black w-full rounded-lg font-[700]
                 hover:bg-gradient-to-r from-[#37D5D6] to-[#36096D] hover:scale-125  transition
                 hover:shadow-lg shadow-lg shadow-black hover:shadow-purple-400 cursor-pointer
                 active:scale-50 active:transitive
             `;
             break;
 
+        
+
         default:
             break;
-        
 
     }
 

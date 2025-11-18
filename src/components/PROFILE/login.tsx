@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Buttons from "../Buttons/Buttons";
-import { Link,useNavigate } from "react-router-dom";
+import { useAppContext } from "../../context/AppContext";
 
 const Login = () => {
+  const { login } = useAppContext(); //  ดึง login จาก Context
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -11,20 +13,15 @@ const Login = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (username === "admin" && password === "1234") {
-      localStorage.setItem("userRole","admin");
-      localStorage.setItem("username", username);
-      navigate("/admin/adminHome");
-    } else if (username === "user" && password === "1111") {
-      localStorage.setItem("userRole","user");
-      localStorage.setItem("username", username);
-      navigate("/user/userHome");
+    const success = login(username, password); //  ใช้ระบบจาก context
+    if (success) {
+      const user = JSON.parse(localStorage.getItem("user")!);
+      if (user.role === "admin") navigate("/");
+      else navigate("/");
     } else {
-      setError("Username or Password Incorrect EIEI");
+      setError("Username หรือ Password ไม่ถูกต้อง");
     }
-  };
-
-
+  }
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gray-900/50 p-4">
