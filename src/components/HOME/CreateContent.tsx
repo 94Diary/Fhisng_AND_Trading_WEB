@@ -45,12 +45,20 @@ const CreateContent: React.FC = () => {
     setImages([]);
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    const filesArray = Array.from(e.target.files).slice(0, 8 - images.length); // max 8 รูป
-    const urls = filesArray.map(file => URL.createObjectURL(file));
-    setImages(prev => [...prev, ...urls]);
-  };
+ const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (!e.target.files) return;
+  const filesArray = Array.from(e.target.files).slice(0, 8 - images.length); // max 8 รูป
+
+  filesArray.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      setImages(prev => [...prev, base64]);
+    };
+    reader.readAsDataURL(file); // แปลงไฟล์เป็น Base64
+  });
+};
+
 
   const removeImage = (idx: number) => {
     setImages(prev => prev.filter((_, i) => i !== idx));
