@@ -2,7 +2,7 @@ import { useAppContext } from "../../context/AppContext";
 import GalleryCard from "./GalleryCard";
 
 const ContentAdmin = () => {
-  const { user, galleryPosts, editGalleryPost, deleteGalleryPost } = useAppContext();
+  const { user, galleryPosts, deleteGalleryPost } = useAppContext(); // ✅ เอา editGalleryPost ออก
   if (!user) return <p>Loading...</p>;
 
   const newsPosts = galleryPosts.filter((p) => p.category === "news");
@@ -14,8 +14,7 @@ const ContentAdmin = () => {
           key={post.id}
           post={post}
           currentUser={user}
-          onDelete={deleteGalleryPost}
-          onUpdate={editGalleryPost}
+          onDelete={deleteGalleryPost} // ✅ ไม่ส่ง onUpdate แล้ว
         />
       ))}
     </div>

@@ -37,8 +37,6 @@ export interface Post {
 
 export interface GalleryPost {
   id: number;
-  title: string;
-  description: string;
   category: string;
   author: string;
   imageUrls: string[];
@@ -67,8 +65,8 @@ interface AppContextType {
   addComment: (postId: number, content: string) => void;
 
   galleryPosts: GalleryPost[];
-  addGalleryPost: (title: string, description: string, imageUrls: string[], category: string) => void;
-  editGalleryPost: (id: number, title: string, description: string) => void;
+  addGalleryPost: (imageUrls: string[], category: string) => void;
+  editGalleryPost: (id: number) => void;
   deleteGalleryPost: (id: number) => void;
   likeGalleryPost: (id: number) => void;
   dislikeGalleryPost: (id: number) => void;
@@ -326,12 +324,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // ================= Gallery =================
-  const addGalleryPost = (title: string, description: string, imageUrls: string[], category: string) => {
+  const addGalleryPost = (imageUrls: string[], category: string) => {
     if (!user) return;
     const newPost: GalleryPost = {
       id: Date.now(),
-      title,
-      description,
       category,
       imageUrls,
       author: user.username,
@@ -346,8 +342,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setGalleryPosts(prev => [newPost, ...prev]);
   };
 
-  const editGalleryPost = (id: number, title: string, description: string) => {
-    setGalleryPosts(prev => prev.map(p => (p.id === id ? { ...p, title, description } : p)));
+  const editGalleryPost = (id: number) => {
+    setGalleryPosts(prev => prev.map(p => (p.id === id ? { ...p } : p)));
   };
 
   const deleteGalleryPost = (id: number) => {
@@ -471,4 +467,3 @@ export const useAppContext = () => {
   if (!context) throw new Error("useAppContext ต้องถูกใช้ภายใน <AppProvider>");
   return context;
 };
-
