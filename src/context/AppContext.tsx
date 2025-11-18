@@ -13,7 +13,6 @@ export interface CodeItem {
   checkedBy: string[];
 }
 
-
 export interface Comment {
   id: number;
   author: string;
@@ -26,7 +25,7 @@ export interface Post {
   title: string;
   description: string;
   author: string;
-  cegegory: string; // general | news
+  category: string; // general | news
   likes: number;
   dislikes: number;
   reports: number;
@@ -40,9 +39,9 @@ export interface GalleryPost {
   id: number;
   title: string;
   description: string;
-  cegegory: string; // general | news
+  category: string; // general | news
   author: string;
-  imageUrls: string; // แทน imageUrl
+  imageUrls: string[]; // แก้เป็น array
   likes: number;
   dislikes: number;
   reports: number;
@@ -52,14 +51,6 @@ export interface GalleryPost {
   comments?: Comment[];
 }
 
-
-export interface Comment {
-  id: number;
-  author: string;
-  content: string;
-  createdAt: string;
-}
-
 // ================= Context Type =================
 interface AppContextType {
   user: User | null;
@@ -67,7 +58,7 @@ interface AppContextType {
   logout: () => void;
 
   posts: Post[];
-  addPost: (title: string, description: string, cegegory: string) => void;
+  addPost: (title: string, description: string, category: string) => void;
   editPost: (id: number, title: string, description: string) => void;
   deletePost: (id: number) => void;
   likePost: (id: number) => void;
@@ -76,13 +67,17 @@ interface AppContextType {
   addComment: (postId: number, content: string) => void;
 
   galleryPosts: GalleryPost[];
-  addGalleryPost: (title: string, description: string, imageUrl: string) => void;
+  addGalleryPost: (title: string, description: string, imageUrls: string[], category: string) => void;
   editGalleryPost: (id: number, title: string, description: string) => void;
   deleteGalleryPost: (id: number) => void;
   likeGalleryPost: (id: number) => void;
   dislikeGalleryPost: (id: number) => void;
   reportGalleryPost: (id: number) => void;
   addGalleryComment: (postId: number, content: string) => void;
+
+  codes: CodeItem[];
+  addCode: (title: string) => void;
+  toggleCodeCheck: (id: number) => void;
 }
 
 // ================= Context =================
@@ -90,37 +85,58 @@ const AppContext = createContext<AppContextType | null>(null);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [codes, setCodes] = useState<CodeItem[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
   const [galleryPosts, setGalleryPosts] = useState<GalleryPost[]>([]);
+  const [codes, setCodes] = useState<CodeItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // ===== Load from localStorage =====
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedCodes = localStorage.getItem("codes");
-    if (storedCodes) setCodes(JSON.parse(storedCodes));
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) setUser(JSON.parse(storedUser));
 
-    if (storedUser) setUser(JSON.parse(storedUser));
+      const storedPosts = localStorage.getItem("posts");
+      if (storedPosts) setPosts(JSON.parse(storedPosts));
 
-    const storedPosts = localStorage.getItem("posts");
-    if (storedPosts) setPosts(JSON.parse(storedPosts));
+      const storedGallery = localStorage.getItem("galleryPosts");
+      if (storedGallery) setGalleryPosts(JSON.parse(storedGallery));
 
-    const storedGallery = localStorage.getItem("galleryPosts");
-    if (storedGallery) setGalleryPosts(JSON.parse(storedGallery));
+      const storedCodes = localStorage.getItem("codes");
+      if (storedCodes) setCodes(JSON.parse(storedCodes));
+    } catch (error) {
+      console.error("Error loading from localStorage", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
+  // ===== Save to localStorage =====
   useEffect(() => {
-    localStorage.setItem("posts", JSON.stringify(posts));
-  }, [posts]);
+    if (!isLoading) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  }, [user, isLoading]);
 
   useEffect(() => {
-    localStorage.setItem("galleryPosts", JSON.stringify(galleryPosts));
-  }, [galleryPosts]);
+    if (!isLoading) {
+      console.log("Saving posts:", posts);
+      localStorage.setItem("posts", JSON.stringify(posts));
+    }
+  }, [posts, isLoading]);
 
   useEffect(() => {
-  localStorage.setItem("codes", JSON.stringify(codes));
-  }, [codes]);
+    if (!isLoading) {
+      console.log("Saving galleryPosts:", galleryPosts);
+      localStorage.setItem("galleryPosts", JSON.stringify(galleryPosts));
+    }
+  }, [galleryPosts, isLoading]);
 
+  useEffect(() => {
+    if (!isLoading) {
+      localStorage.setItem("codes", JSON.stringify(codes));
+    }
+  }, [codes, isLoading]);
 
   // ================= Auth =================
   const login = (username: string, password: string): boolean => {
@@ -129,7 +145,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     else if (username === "user" && password === "1111") userData = { username, role: "user" };
 
     if (userData) {
-      localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
       return true;
     }
@@ -137,68 +152,66 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const logout = () => {
-    localStorage.removeItem("user");
     setUser(null);
   };
-  const addCode = (title: string) => {
-  if (!user || user.role !== "admin") return;
 
-  const newCode: CodeItem = {
-    id: Date.now(),
-    title,
-    checkedBy: [],
+  // ================= Code =================
+  const addCode = (title: string) => {
+    if (!user || user.role !== "admin" || isLoading) return;
+    const newCode: CodeItem = { id: Date.now(), title, checkedBy: [] };
+    setCodes(prev => [newCode, ...prev]);
   };
 
-  setCodes(prev => [newCode, ...prev]);
-};
+  const toggleCodeCheck = (id: number) => {
+    if (!user || isLoading) return;
+    setCodes(prev =>
+      prev.map(c =>
+        c.id === id
+          ? {
+              ...c,
+              checkedBy: c.checkedBy.includes(user.username)
+                ? c.checkedBy.filter(u => u !== user.username)
+                : [...c.checkedBy, user.username],
+            }
+          : c
+      )
+    );
+  };
 
-const toggleCodeCheck = (id: number) => {
-  if (!user) return;
-
-  setCodes(prev =>
-    prev.map(c =>
-      c.id === id
-        ? {
-            ...c,
-            checkedBy: c.checkedBy.includes(user.username)
-              ? c.checkedBy.filter(u => u !== user.username)
-              : [...c.checkedBy, user.username],
-          }
-        : c
-    )
-  );
-};
-
-  
   // ================= WebBoard =================
-  const addPost = (title: string, description: string, cegegory: string) => {
-    if (!user) return;
+  const addPost = (title: string, description: string, category: string) => {
+    if (!user || isLoading) return;
     const newPost: Post = {
       id: Date.now(),
       title,
       description,
       author: user.username,
-      cegegory,
+      category,
       likes: 0,
       dislikes: 0,
       reports: 0,
+      likedBy: [],
+      dislikedBy: [],
+      reportedBy: [],
+      comments: [],
     };
     setPosts(prev => [newPost, ...prev]);
   };
 
   const editPost = (id: number, title: string, description: string) => {
+    if (isLoading) return;
     setPosts(prev => prev.map(p => (p.id === id ? { ...p, title, description } : p)));
   };
 
   const deletePost = (id: number) => {
-    if (!user) return;
+    if (!user || isLoading) return;
     setPosts(prev =>
       prev.filter(p => (user.role === "admin" ? p.id !== id : p.author === user.username ? p.id !== id : true))
     );
   };
 
   const likePost = (id: number) => {
-    if (!user) return;
+    if (!user || isLoading) return;
     setPosts(prev =>
       prev.map(p => {
         if (p.id !== id) return p;
@@ -216,7 +229,7 @@ const toggleCodeCheck = (id: number) => {
   };
 
   const dislikePost = (id: number) => {
-    if (!user) return;
+    if (!user || isLoading) return;
     setPosts(prev =>
       prev.map(p => {
         if (p.id !== id) return p;
@@ -234,7 +247,7 @@ const toggleCodeCheck = (id: number) => {
   };
 
   const reportPost = (id: number) => {
-    if (!user) return;
+    if (!user || isLoading) return;
     setPosts(prev =>
       prev.map(p => {
         if (p.id !== id) return p;
@@ -249,7 +262,7 @@ const toggleCodeCheck = (id: number) => {
   };
 
   const addComment = (postId: number, content: string) => {
-    if (!user) return;
+    if (!user || isLoading) return;
     setPosts(prev =>
       prev.map(p =>
         p.id === postId
@@ -260,39 +273,40 @@ const toggleCodeCheck = (id: number) => {
   };
 
   // ================= Gallery =================
- const addGalleryPost = (title: string, description: string, imageUrls: string, cegegory: string) => {
-  const newPost: GalleryPost = {
-    id: Date.now(),
-    title,
-    description,
-    cegegory,
-    imageUrls,
-    author: user.username,
-    likes: 0,
-    dislikes: 0,
-    reports: 0,
-    likedBy: [],
-    dislikedBy: [],
-    reportedBy: [],
-    comments: [],
+  const addGalleryPost = (title: string, description: string, imageUrls: string[], category: string) => {
+    if (!user || isLoading) return;
+    const newPost: GalleryPost = {
+      id: Date.now(),
+      title,
+      description,
+      category,
+      imageUrls,
+      author: user.username,
+      likes: 0,
+      dislikes: 0,
+      reports: 0,
+      likedBy: [],
+      dislikedBy: [],
+      reportedBy: [],
+      comments: [],
+    };
+    setGalleryPosts(prev => [newPost, ...prev]);
   };
-  setGalleryPosts(prev => [newPost, ...prev]);
-};
-
 
   const editGalleryPost = (id: number, title: string, description: string) => {
+    if (isLoading) return;
     setGalleryPosts(prev => prev.map(p => (p.id === id ? { ...p, title, description } : p)));
   };
 
   const deleteGalleryPost = (id: number) => {
-    if (!user) return;
+    if (!user || isLoading) return;
     setGalleryPosts(prev =>
       prev.filter(p => (user.role === "admin" ? p.id !== id : p.author === user.username ? p.id !== id : true))
     );
   };
 
   const likeGalleryPost = (id: number) => {
-    if (!user) return;
+    if (!user || isLoading) return;
     setGalleryPosts(prev =>
       prev.map(p => {
         if (p.id !== id) return p;
@@ -310,7 +324,7 @@ const toggleCodeCheck = (id: number) => {
   };
 
   const dislikeGalleryPost = (id: number) => {
-    if (!user) return;
+    if (!user || isLoading) return;
     setGalleryPosts(prev =>
       prev.map(p => {
         if (p.id !== id) return p;
@@ -328,7 +342,7 @@ const toggleCodeCheck = (id: number) => {
   };
 
   const reportGalleryPost = (id: number) => {
-    if (!user) return;
+    if (!user || isLoading) return;
     setGalleryPosts(prev =>
       prev.map(p => {
         if (p.id !== id) return p;
@@ -343,7 +357,7 @@ const toggleCodeCheck = (id: number) => {
   };
 
   const addGalleryComment = (postId: number, content: string) => {
-    if (!user) return;
+    if (!user || isLoading) return;
     setGalleryPosts(prev =>
       prev.map(p =>
         p.id === postId
@@ -376,12 +390,12 @@ const toggleCodeCheck = (id: number) => {
         dislikeGalleryPost,
         reportGalleryPost,
         addGalleryComment,
-        codes,       
+        codes,
         addCode,
         toggleCodeCheck,
       }}
     >
-      {children}
+      {isLoading ? <p>Loading...</p> : children}
     </AppContext.Provider>
   );
 };

@@ -2,7 +2,7 @@ import CreateContent from "./CreateContent";
 import Code from "./CreateCode";
 import Buttons from "../Buttons/Buttons";
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 
 const Home = () => {
   const navigate = useNavigate();

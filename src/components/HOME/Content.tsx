@@ -23,7 +23,7 @@ const Content: React.FC<ContentProps> = ({ id, title, description, imageUrls = [
 
   return (
     <div
-      className="relative max-w-4xl h-[500px] mx-auto my-4 p-6 bg-red-900 text-white rounded-3xl shadow-lg cursor-pointer "
+      className="relative max-w-4xl mx-auto my-4 p-6 bg-red-900 text-white rounded-3xl shadow-lg cursor-pointer "
       onClick={() => setShowFull(!showFull)}
     >
       <h1 className="font-bold text-2xl mb-2">{title}</h1>
@@ -35,7 +35,7 @@ const Content: React.FC<ContentProps> = ({ id, title, description, imageUrls = [
             key={idx}
             src={url}
             className="w-full h-full object-cover rounded cursor-pointer"
-            onClick={(e) => window.open(url, "_blank")}
+            onClick={() => window.open(url, "_blank")}
           />
         ))}
       </div>

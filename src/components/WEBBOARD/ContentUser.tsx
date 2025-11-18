@@ -7,7 +7,7 @@ const ContentUser = () => {
   if (!user) return <p>Loading...</p>;
 
   // filter เฉพาะหมวด general
-  const generalPosts = posts.filter((p) => p.cegegory === "general");
+  const generalPosts = posts.filter((p) => p.category === "general");
 
   return (
     <div className="flex flex-col w-full gap-6">
