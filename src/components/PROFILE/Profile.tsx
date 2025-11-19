@@ -4,7 +4,6 @@ import Buttons from "../Buttons/Buttons";
 import { useAppContext } from "../../context/AppContext";
 import { motion, AnimatePresence } from "framer-motion";
 
-
 const Profile = () => {
   const { user, profileImages, addProfileImage } = useAppContext();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -18,7 +17,6 @@ const Profile = () => {
     if (!user) {
       setShowPopup(true);
     } else {
-      // โหลดรูปล่าสุดของ user
       const images = profileImages[user.username];
       if (images && images.length > 0) setCurrentImage(images[images.length - 1]);
     }
@@ -29,7 +27,7 @@ const Profile = () => {
     setUsername(null);
     setRole(null);
     navigate("/");
-    window.location.reload
+    window.location.reload();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,10 +47,10 @@ const Profile = () => {
   if (!user?.username) {
     return (
       <AnimatePresence>
-        <>
-          {showPopup && (
-            <motion.div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-              <motion.div className="bg-gray-800 p-8 rounded-2xl text-center w-[350px] shadow-xl" 
+        {showPopup && (
+          <motion.div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+            <motion.div
+              className="bg-gray-800 p-6 sm:p-8 rounded-2xl text-center w-[90%] max-w-sm shadow-xl"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{
@@ -60,30 +58,27 @@ const Profile = () => {
                 delay: 0.2,
                 ease: [0, 0.71, 0.2, 1.01],
               }}
+            >
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 text-white">คุณต้องล็อคอินก่อน</h2>
+              <p className="text-gray-300 mb-6">กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้านี้</p>
+              <button
+                onClick={() => navigate("/Profile/Login")}
+                className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl text-white font-semibold"
               >
-                <h2 className="text-2xl font-bold mb-4 text-white">คุณต้องล็อคอินก่อน</h2>
-                <p className="text-gray-300 mb-6">กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้านี้</p>
-                <button
-                  onClick={() => navigate("/Profile/Login")}
-                  className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl text-white font-semibold"
-                >
-                  ไปหน้า Login
-                </button>
-              </motion.div>
+                ไปหน้า Login
+              </button>
             </motion.div>
-          )}
-        </>
+          </motion.div>
+        )}
       </AnimatePresence>
-      
     );
   }
 
   return (
-    <div className="mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen p-6">
-      <div className="flex w-[90%] gap-6">
+    <div className="mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen px-4 sm:px-6 lg:px-8 py-6">
+      <div className="flex flex-col lg:flex-row w-full gap-6">
         {/* กล่องด้านซ้าย */}
-        <div className="w-[25%] h-[600px] bg-gray-800 p-6 rounded-3xl flex flex-col items-center gap-6">
-          {/* รูปโปรไฟล์ */}
+        <div className="w-full  lg:w-1/4 bg-gray-800 p-6 rounded-3xl flex flex-col items-center gap-6">
           <div
             className="w-40 h-40 rounded-full bg-white overflow-hidden cursor-pointer hover:opacity-50"
             onClick={handleImageClick}
@@ -107,7 +102,6 @@ const Profile = () => {
 
           <div className="px-4 py-1 font-bold shadow">{user.username}</div>
 
-          {/* ปุ่มเมนู */}
           <Link className="w-full" to="/Profile">
             <Buttons variant="profileCom">Profile</Buttons>
           </Link>
@@ -123,9 +117,9 @@ const Profile = () => {
         </div>
 
         {/* กล่องด้านขวา */}
-        <div className="w-[70%] bg-gray-800 rounded-3xl p-6 flex flex-col gap-6">
-          <h2 className="text-3xl font-bold">Account Info</h2>
-          <div className="space-y-3">
+        <div className="w-full lg:w-2/3 bg-gray-800 rounded-3xl p-6 flex flex-col gap-6">
+          <h2 className="text-2xl sm:text-3xl font-bold">Account Info</h2>
+          <div className="space-y-3 text-sm sm:text-base">
             <p>
               Display Name: <span className="font-semibold">{user.username}</span>
             </p>
