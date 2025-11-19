@@ -1,15 +1,34 @@
-import { useAppContext } from "../../context/AppContext";
 import GalleryCard from "./GalleryCard";
+import usePersistentState from "../../hook/userPersistetState.js";
+import {mockGallery} from "../../DATA/MockData.js"; 
+import { useEffect, useState } from "react";
 
 const ContentUser = () => {
-  const { user, galleryPosts, editGalleryPost, deleteGalleryPost } = useAppContext();
+  const [galleryPosts, setGalleryPosts] = usePersistentState("gallery", mockGallery);
+  const [user, setUser] = useState<{ username: string; role: string } | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(JSON.parse(storedUser));
+  }, []);
+
+  const editGalleryPost = (id: number, title: string, desc: string) => {
+    setGalleryPosts(prev =>
+      prev.map(p => (p.id === id ? { ...p, title, description: desc } : p))
+    );
+  };
+
+  const deleteGalleryPost = (id: number) => {
+    setGalleryPosts(prev => prev.filter(p => p.id !== id));
+  };
+
   if (!user) return <p>Loading...</p>;
 
-  const generalPosts = galleryPosts.filter((p) => p.category === "general");
+  const generalPosts = galleryPosts.filter(p => p.category === "general");
 
   return (
     <div className="flex flex-col w-full gap-6">
-      {generalPosts.map((post) => (
+      {generalPosts.map(post => (
         <GalleryCard
           key={post.id}
           post={post}

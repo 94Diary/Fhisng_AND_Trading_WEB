@@ -25,7 +25,6 @@ export interface Post {
   title: string;
   description: string;
   author: string;
-  imageUrls: string[];
   category: string;
   likes: number;
   dislikes: number;
@@ -59,7 +58,7 @@ interface AppContextType {
   logout: () => void;
 
   posts: Post[];
-  addPost: (title: string, description: string,imageUrls: string[], category: string) => void;
+  addPost: (title: string, description: string, category: string) => void;
   editPost: (id: number, title: string, description: string) => void;
   deletePost: (id: number) => void;
   likePost: (id: number) => void;
@@ -186,14 +185,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // ================= Check-In =================
   const handleCheckIn = (username: string) => {
-    const now = Date.now();
+    //const now = Date.now();
     const today = new Date().toDateString();
     const lastCheck = localStorage.getItem(`lastCheck_${username}`); //รายวัน
     //const lastCheck = Number(localStorage.getItem(`lastCheck_${username}`) || 0); //ราย 10 วินาที ทดสอบเฉยๆ
 
-    //if (lastCheck === today) return; //รายวัน
+    if (lastCheck === today) return; //รายวัน
 
-    if (now - lastCheck < 10 * 1000) return; //ราย 10 วินาที ทดสอบเฉยๆ
+    //if (now - lastCheck < 10 * 1000) return; ราย 10 วินาที ทดสอบเฉยๆ
 
 
     setCheckInStatus(prev => {
@@ -234,14 +233,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // ================= Posts =================
-  const addPost = (title: string, description: string,imageUrls:string[] ,category: string) => {
+  const addPost = (title: string, description: string, category: string) => {
     if (!user) return;
     const newPost: Post = {
       id: Date.now(),
       title,
       description,
       author: user.username,
-      imageUrls,
       category,
       likes: 0,
       dislikes: 0,

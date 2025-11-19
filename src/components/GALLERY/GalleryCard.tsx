@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import type { User, GalleryPost } from "../../context/AppContext";
 import { useAppContext } from "../../context/AppContext";
 
+
 interface GalleryCardProps {
   post: GalleryPost;
   currentUser: User | null;

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
+import usePersistentState from "../../hook/userPersistetState.js";
+import {mockCode} from "../../DATA/MockData.js"; 
 import CodeProps from "./CodeProps";
 
 const CreateCode = () => {
-  const [codes, setCodes] = useState<{ id: number; title: string; checkedBy: string[]; author: string }[]>(() => {
-    const stored = localStorage.getItem("codes");
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [codes, setCodes] = usePersistentState("codes", mockCode);
+
   const [title, setTitle] = useState("");
   const [user, setUser] = useState<{ username: string; role: string } | null>(null);
 
@@ -13,10 +13,6 @@ const CreateCode = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) setUser(JSON.parse(storedUser));
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem("codes", JSON.stringify(codes));
-  }, [codes]);
 
   const addCode = () => {
     if (!user || user.role !== "admin" || !title.trim()) return;
@@ -28,6 +24,7 @@ const CreateCode = () => {
   const toggleCheck = (id: number) => {
     if (!user) return;
     setCodes(prev =>
+      
       prev.map(c =>
         c.id === id
           ? {

@@ -1,6 +1,7 @@
 // CreateContent.tsx
 import React, { useState, useEffect } from "react";
 import Content from "./Content";
+import {mockHomeBanners} from "../../DATA/MockData.js";
 
 interface ContentItem {
   id: number;
@@ -12,13 +13,28 @@ interface ContentItem {
 const CreateContent: React.FC = () => {
   const [contents, setContents] = useState<ContentItem[]>(() => {
     const stored = localStorage.getItem("contents");
-    return stored ? JSON.parse(stored) : [];
+    const parsed = stored ? JSON.parse(stored) : [];
+    return stored?.length ? parsed : mockHomeBanners;
   });
 
   const [user, setUser] = useState<{ username: string; role: string } | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+  const stored = localStorage.getItem("contents");
+
+  if (!stored || JSON.parse(stored).length === 0) {
+    // ถ้าไม่มี contents ใน localStorage หรือ array ว่าง
+    localStorage.setItem("contents", JSON.stringify(mockHomeBanners));
+    setContents(mockHomeBanners); // โหลด mockHomeBanners
+  } else {
+    // มีค่าเก่า ให้โหลดค่าที่เก็บไว้
+    setContents(JSON.parse(stored));
+  }
+}, []);
+
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
