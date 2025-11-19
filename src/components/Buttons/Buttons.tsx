@@ -27,7 +27,7 @@ const Buttons: React.FC<ButtonProps> = ({
     switch (variant) {
         case 'checkIn':
             variantStyles = `
-                bg-white text-black border-black-2xl w-[10%]
+                bg-white text-black border-black-2xl  
                 hover:bg-black hover:border-white hover:scale-105 hover:text-white
                 shadow-2xl shadow-black hover:shadow-xl transition duration-300  cursor-pointer
                 active:scale-50 active:transition active:bg-gray-700
