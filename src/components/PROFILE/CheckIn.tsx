@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import Buttons from "../Buttons/Buttons";
 import { Link , useNavigate  } from "react-router-dom";
-import { m } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const CheckIn = () => {
   const { user, profileImages, checkInStatus, resetCheckIn, handleCheckIn } = useAppContext();
@@ -33,9 +33,31 @@ const CheckIn = () => {
 
   const handleClickCheckIn = () => {
     if (!user) return;
-    
 
+    const today = new Date().toDateString();
+     const lastCheck = localStorage.getItem(`lastCheck_${user.username}`);
+
+     //ถ้าวันนี้เช็คอินแล้ว → แสดง popup
+    if (lastCheck === today) {
+       setAlreadyCheckInPopup(true);
+       return;
+     }
+
+    // // เช็คอินปกติ
     handleCheckIn(user.username);
+    //window.location.reload();
+
+     // หลังเช็คอินแล้ว อัปเดต status ล่าสุด
+     const updatedStatus = checkInStatus[user.username] || [];
+     const newStatus = [...updatedStatus];
+
+    // ตรงนี้เช็คว่าครบ 7 วันหรือยัง
+     const isAllChecked = newStatus.filter(Boolean).length === 7;
+
+    if (isAllChecked) {
+      // ถ้าครบ 7 วัน → รีเซ็ต
+      resetCheckIn(user.username);
+    }
   };
 
   const handleReset = () => {
@@ -48,22 +70,32 @@ const CheckIn = () => {
   return (
     
     <div className="mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen p-6">
+      <AnimatePresence>
 
-    {alreadyCheckInPopup && (
-      <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-        <div className="bg-gray-800 p-8 rounded-2xl shadow-xl text-center">
-          <h2 className="text-2xl font-bold mb-4 text-white">
-            วันนี้คุณเช็คอินไปแล้ว!
-          </h2>
-          <Buttons
-            variant="checkIn"
-            onClick={() => setAlreadyCheckInPopup(false)}
-          >
-            ตกลง
-          </Buttons>
-        </div>
-      </div>
-    )}
+        {alreadyCheckInPopup && (
+          <motion.div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 ">
+            <motion.div className="bg-gray-800 p-5 rounded-2xl shadow-xl text-center"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.8,
+              delay: 0.2,
+              ease: [0, 0.71, 0.2, 1.01],
+            }}
+            >
+              <h2 className="text-2xl font-bold mb-4 text-white ">
+                วันนี้คุณเช็คอินไปแล้ว!
+              </h2>
+              <Buttons
+                variant="login"
+                onClick={() => setAlreadyCheckInPopup(false)}
+              >
+                ตกลง
+              </Buttons>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
 
       <div className="flex w-[90%] gap-6">

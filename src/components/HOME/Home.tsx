@@ -3,11 +3,24 @@ import Code from "./CreateCode";
 import Buttons from "../Buttons/Buttons";
 import { Link, useNavigate } from "react-router-dom";
 import  { useState, useEffect } from "react";
+import { useAppContext } from "../../context/AppContext";
+import type { Post } from "../../context/AppContext";
+
 
 const Home = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
+  const { posts, getTopLikedPosts } = useAppContext();
+
+  const [topPosts, setTopPosts] = useState<Post[]>([]);
+
+  
+useEffect(() => {
+  setTopPosts(getTopLikedPosts());
+}, [posts]);
+
+  
 
   useEffect(() => {
   const storedUser = localStorage.getItem("user");
@@ -86,7 +99,21 @@ const Home = () => {
         )}
 
         <div className="flex-1 m-4 bg-gray-800/80 p-4 rounded-2xl shadow-inner flex items-center justify-center text-red-500 font-bold">
-          ขวา
+           <div className="bg-gray-800 p-4 rounded-xl shadow-lg">
+              <h3 className="text-lg font-bold text-white mb-2">🔥 โพสต์ยอดนิยม</h3>
+              {topPosts.length === 0 ? (
+                <p className="text-gray-400 text-sm">ยังไม่มีโพสต์ยอดนิยม</p>
+              ) : (
+                <ul className="space-y-2">
+                  {topPosts.map(post => (
+                    <li key={post.id} className="text-sm text-gray-300">
+                      <span className="font-semibold">{post.title}</span> — {post.likes} ไลค์
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
         </div>
       </div>
     </div>

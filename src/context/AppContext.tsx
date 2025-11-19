@@ -25,6 +25,7 @@ export interface Post {
   title: string;
   description: string;
   author: string;
+  imageUrls: string[];
   category: string;
   likes: number;
   dislikes: number;
@@ -51,13 +52,15 @@ export interface GalleryPost {
 
 // ================= Context Type =================
 interface AppContextType {
+  getTopLikedPosts: (limit?: number) => Post[];
+
   user: User | null;
   login: (username: string, password: string) => boolean;
   logout: () => void;
 
   posts: Post[];
-  addPost: (title: string, description: string, category: string) => void;
-  editPost: (id: number, title: string, description: string) => void;
+  addPost: (title: string, description: string,imageUrls: string[], category: string) => void;
+  editPost: (id: number, title: string, description: string ,imageUrls: string[]) => void;
   deletePost: (id: number) => void;
   likePost: (id: number) => void;
   dislikePost: (id: number) => void;
@@ -66,7 +69,7 @@ interface AppContextType {
 
   galleryPosts: GalleryPost[];
   addGalleryPost: (imageUrls: string[], category: string) => void;
-  editGalleryPost: (id: number) => void;
+  editGalleryPost: (id: number, title: string, description: string) => void;
   deleteGalleryPost: (id: number) => void;
   likeGalleryPost: (id: number) => void;
   dislikeGalleryPost: (id: number) => void;
@@ -88,6 +91,9 @@ interface AppContextType {
 
 // ================= Context =================
 const AppContext = createContext<AppContextType | null>(null);
+
+
+
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -190,7 +196,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     if (lastCheck === today) return; //รายวัน
 
-    //if (now - lastCheck < 10 * 1000) return; ราย 10 วินาที ทดสอบเฉยๆ
+    //if (now - lastCheck < 10 * 1000) return;// ราย 10 วินาที ทดสอบเฉยๆ
 
 
     setCheckInStatus(prev => {
@@ -229,15 +235,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       )
     );
   };
+  // ================= TopLike ===============
+  const getTopLikedPosts = (limit: number = 3): Post[] => {
+  return [...posts]
+    .sort((a, b) => b.likes - a.likes)
+    .slice(0, limit);
+};
+
 
   // ================= Posts =================
-  const addPost = (title: string, description: string, category: string) => {
+  const addPost = (title: string, description: string,imageUrls:string[] ,category: string) => {
     if (!user) return;
     const newPost: Post = {
       id: Date.now(),
       title,
       description,
       author: user.username,
+      imageUrls,
       category,
       likes: 0,
       dislikes: 0,
@@ -250,15 +264,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setPosts(prev => [newPost, ...prev]);
   };
 
-  const editPost = (id: number, title: string, description: string) => {
-    setPosts(prev => prev.map(p => (p.id === id ? { ...p, title, description } : p)));
+  const editPost = (id: number, title: string, description: string, imageUrls: string[]) => {
+    setPosts(prev => {
+      const updated = prev.map(p => (p.id === id ? { ...p, title, description, imageUrls } : p));
+      localStorage.setItem("posts", JSON.stringify(updated));
+      return updated;
+    });
   };
 
+
   const deletePost = (id: number) => {
-    if (!user) return;
-    setPosts(prev =>
-      prev.filter(p => (user.role === "admin" ? p.id !== id : p.author === user.username ? p.id !== id : true))
-    );
+  if (!user) return;
+    setPosts(prev => {
+      const updated = prev.filter(p =>
+        user.role === "admin" ? p.id !== id : p.author === user.username ? p.id !== id : true
+      );
+      localStorage.setItem("posts", JSON.stringify(updated)); // ✅ เซฟกลับ
+      return updated;
+    });
   };
 
   const likePost = (id: number) => {
@@ -342,8 +365,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setGalleryPosts(prev => [newPost, ...prev]);
   };
 
-  const editGalleryPost = (id: number) => {
-    setGalleryPosts(prev => prev.map(p => (p.id === id ? { ...p } : p)));
+  const editGalleryPost = (id: number, title: string, description: string) => {
+    setGalleryPosts(prev => prev.map(p => (p.id === id ? { ...p, title, description } : p)));
   };
 
   const deleteGalleryPost = (id: number) => {
@@ -455,8 +478,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         checkInStatus,
         handleCheckIn,
         resetCheckIn,
+        getTopLikedPosts, // ✅ เพิ่มตรงนี้
       }}
     >
+
       {isLoading ? <p>Loading...</p> : children}
     </AppContext.Provider>
   );
