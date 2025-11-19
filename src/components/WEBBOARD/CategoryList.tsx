@@ -8,7 +8,7 @@ const CategoryList = () => {
         description="อัพเดทข่าวสารต่างๆ ที่น่าสนใจ"
         to="/webboard/news"
       />
-      <Category 
+      <Category
         title="หมวดหมู่ทั่วไป"
         description="พูดคุยเรื่องทั่วไปที่ไม่เข้าพวก"
         to="/webboard/general"
