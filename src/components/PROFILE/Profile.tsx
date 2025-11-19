@@ -9,6 +9,8 @@ const Profile = () => {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [username,setUsername] = useState<string | null>(null);
+  const [role,setRole] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -21,7 +23,11 @@ const Profile = () => {
   }, [user, profileImages]);
 
   const handleLogout = () => {
-    navigate("/");
+    setUsername(null);
+    setRole(null);
+    localStorage.removeItem("user");
+    navigate("/Profile/Login");
+    window.location.reload();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +44,7 @@ const Profile = () => {
 
   const handleImageClick = () => fileInputRef.current?.click();
 
-  if (!user) {
+  if (!user?.username) {
     return (
       <>
         {showPopup && (

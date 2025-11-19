@@ -40,6 +40,7 @@ const Home = () => {
     setUsername(null);
     setRole(null);
     navigate("/");
+    window.location.reload();
   };
 
   return (

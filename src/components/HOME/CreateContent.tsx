@@ -47,7 +47,7 @@ const CreateContent: React.FC = () => {
 
  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   if (!e.target.files) return;
-  const filesArray = Array.from(e.target.files).slice(0, 8 - images.length); // max 8 รูป
+  const filesArray = Array.from(e.target.files).slice(0, 1 - images.length); // max 8 รูป
 
   filesArray.forEach(file => {
     const reader = new FileReader();

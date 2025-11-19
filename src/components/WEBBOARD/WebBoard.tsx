@@ -12,14 +12,13 @@ const WebBoard = () => {
   if (!user) return <p>Loading...</p>;
 
   const showButtons = location.pathname !== "/webboard";
+  const currentCategory = location.pathname.replace("/gallery/", "");
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
   // กำหนด default เผื่อ replace คืนค่าว่าง
-  const currentCategory: "general" | "news" =
-    (location.pathname.replace("/webboard/", "") as "general" | "news") || "general";
 
   const handleSubmit = () => {
     if (!title.trim() || !description.trim()) return alert("กรุณากรอกทุกช่อง!");

@@ -23,13 +23,13 @@ const Content: React.FC<ContentProps> = ({ id, title, description, imageUrls = [
 
   return (
     <div
-      className="relative max-w-4xl mx-auto my-4 p-6 bg-red-900 text-white rounded-3xl shadow-lg cursor-pointer "
+      className="relative max-w-4xl mx-auto  justify-center ite p-6 bg-red-900 text-white rounded-3xl shadow-lg cursor-pointer "
       onClick={() => setShowFull(!showFull)}
     >
       <h1 className="font-bold text-2xl mb-2">{title}</h1>
       <p className="whitespace-pre-line">{showFull ? fullDesc : previewDesc}</p>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
+      <div className=" w-[640px] h-[360px] gap-3 mt-3">
         {imageUrls.map((url, idx) => (
           <img
             key={idx}
