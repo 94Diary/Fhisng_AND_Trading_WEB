@@ -1,4 +1,3 @@
-// src/components/GALLERY/Gallery.tsx
 import { useState, useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Buttons from "../Buttons/Buttons";
@@ -6,19 +5,21 @@ import { useAppContext } from "../../context/AppContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Gallery = () => {
-  const { user, addGalleryPost } = useAppContext();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [showPopup, setShowPopup] = useState(false);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const { user, addGalleryPost } = useAppContext(); // ดึง user และฟังก์ชันเพิ่มโพสต์
+  const location = useLocation(); // ใช้เช็ค path ปัจจุบัน
+  const navigate = useNavigate(); // ใช้ navigate ไปหน้าอื่น
+  const [showPopup, setShowPopup] = useState(false); // popup สำหรับล็อกอิน
+  const [showCreateModal, setShowCreateModal] = useState(false); // modal สร้างโพสต์
+  const [imageFiles, setImageFiles] = useState<File[]>([]); // state เก็บไฟล์รูปที่เลือก
 
-  const currentCategory = location.pathname.replace("/gallery/", "");
+  const currentCategory = location.pathname.replace("/gallery/", ""); // แยกชื่อ category จาก path
 
+  // ตรวจสอบ user ถ้าไม่ล็อกอินให้ popup
   useEffect(() => {
     if (!user) setShowPopup(true);
   }, [user]);
 
+  // ฟังก์ชัน submit สร้างโพสต์
   const handleSubmit = () => {
     if (imageFiles.length === 0) {
       alert("กรุณาเลือกภาพอย่างน้อย 1 รูป!");
@@ -30,7 +31,7 @@ const Gallery = () => {
       return;
     }
 
-    // อ่านไฟล์ทุกอันและสร้าง array ของ URL
+    // แปลงไฟล์เป็น base64
     const readerPromises = imageFiles.map(
       (file) =>
         new Promise<string>((resolve, reject) => {
@@ -41,20 +42,22 @@ const Gallery = () => {
         })
     );
 
+    // หลังแปลงเสร็จ ส่งไป addGalleryPost
     Promise.all(readerPromises).then((urls) => {
       addGalleryPost(urls, currentCategory);
-      setImageFiles([]);
-      setShowCreateModal(false);
+      setImageFiles([]); // เคลียร์ไฟล์
+      setShowCreateModal(false); // ปิด modal
     });
   };
 
+  // ถ้า user ไม่ล็อกอิน
   if (!user?.username) {
     return (
       <AnimatePresence>
         {showPopup && (
           <motion.div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
             <motion.div
-              className="bg-gray-800 p-8 rounded-2xl text-center w-[350px] shadow-xl"
+              className="bg-gray-800 p-6 sm:p-8 rounded-2xl text-center w-[90%] max-w-sm shadow-xl"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{
@@ -63,8 +66,12 @@ const Gallery = () => {
                 ease: [0, 0.71, 0.2, 1.01],
               }}
             >
-              <h2 className="text-2xl font-bold mb-4 text-white">คุณต้องล็อคอินก่อน</h2>
-              <p className="text-gray-300 mb-6">กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้านี้</p>
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 text-white">
+                คุณต้องล็อคอินก่อน
+              </h2>
+              <p className="text-gray-300 mb-6">
+                กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้านี้
+              </p>
               <button
                 onClick={() => navigate("/Profile/Login")}
                 className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl text-white font-semibold"
@@ -79,10 +86,11 @@ const Gallery = () => {
   }
 
   return (
-    <div className="mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen p-6">
+    <div className="mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen px-4 sm:px-6 lg:px-8 py-6">
       {/* ปุ่ม Create / Back */}
       {location.pathname !== "/gallery" && (
-        <div className="flex justify-end w-[90%] mb-4 gap-4">
+        <div className="flex flex-col sm:flex-row justify-end w-full max-w-5xl mb-4 gap-4">
+          {/* ถ้า user ไม่ใช่ role user หรือ category ไม่ใช่ news จึงแสดง create */}
           {user?.role !== "user" || currentCategory !== "news" ? (
             <Buttons variant="create" onClick={() => setShowCreateModal(true)}>
               Create Gallery Post
@@ -99,7 +107,7 @@ const Gallery = () => {
         {showCreateModal && (
           <motion.div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <motion.div
-              className="bg-gray-800 p-6 rounded-lg w-96 flex flex-col gap-4 "
+              className="bg-gray-800 p-6 rounded-lg w-[90%] max-w-md flex flex-col gap-4"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{
@@ -108,8 +116,11 @@ const Gallery = () => {
                 ease: [0, 0.71, 0.2, 1.01],
               }}
             >
-              <h2 className="text-2xl font-bold text-white">สร้างโพสต์ใหม่</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">
+                สร้างโพสต์ใหม่
+              </h2>
 
+              {/* Input สำหรับเลือกไฟล์รูป */}
               <input
                 type="file"
                 accept="image/*"
@@ -117,28 +128,29 @@ const Gallery = () => {
                 onChange={(e) => {
                   const files = e.target.files;
                   if (!files) return;
-                  setImageFiles(Array.from(files).slice(0, 5)); // สูงสุด 5
+                  setImageFiles(Array.from(files).slice(0, 5)); // จำกัดสูงสุด 5 รูป
                 }}
                 className="text-black"
               />
 
-              <motion.div className="flex justify-end gap-4">
+              {/* ปุ่มยกเลิก / สร้างโพสต์ */}
+              <div className="flex justify-end gap-4">
                 <Buttons variant="back" onClick={() => setShowCreateModal(false)}>
                   ยกเลิก
                 </Buttons>
                 <Buttons variant="create" onClick={handleSubmit}>
                   สร้างโพสต์
                 </Buttons>
-              </motion.div>
+              </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Post List */}
-      <div className="flex w-[90%] gap-6">
-        <div className="flex flex-1 flex-col gap-6 bg-gray-800 p-6 rounded-lg items-center">
-          <Outlet />
+      <div className="w-full max-w-5xl">
+        <div className="flex flex-col gap-6 bg-gray-800 p-6 rounded-lg items-center">
+          <Outlet /> {/* แสดง GalleryPost ตาม route ย่อย */}
         </div>
       </div>
     </div>

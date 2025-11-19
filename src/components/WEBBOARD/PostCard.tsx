@@ -38,7 +38,7 @@ const PostCard: React.FC<PostCardProps> = ({
   setMenuOpen(false);
 };
 
-  const saveEdit = () => {
+  const saveEdit = () => { // บันทึกการแก้ไข
   if (!editTitle.trim() || !editDesc.trim()) return;
     onUpdate(post.id, editTitle, editDesc, editImage);
     setEditModalOpen(false);
@@ -46,7 +46,7 @@ const PostCard: React.FC<PostCardProps> = ({
   };
 
 
-  const handleDelete = () => {
+  const handleDelete = () => { // ลบโพสต์
     if (window.confirm("ต้องการลบโพสต์นี้หรือไม่?")) {
       onDelete(post.id);
     }
@@ -74,7 +74,7 @@ const PostCard: React.FC<PostCardProps> = ({
         <motion.div className="flex justify-between ">
           <h2 className="text-2xl font-bold">{post.title}</h2>
 
-          {(isOwner || isAdmin) && (
+          {(isOwner || isAdmin) && (// เมนูแก้ไขลบโพสต์
             <motion.div className="relative">
               <motion.button onClick={() => setMenuOpen(!menuOpen)}>
                 <MoreVertical className="w-6 h-6 text-white" />
@@ -103,7 +103,7 @@ const PostCard: React.FC<PostCardProps> = ({
         </motion.div>
 
 
-          {editModalOpen && (
+          {editModalOpen && (// โมดัลแก้ไขโพสต์
             <motion.div 
               className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
               <motion.div
@@ -154,7 +154,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
 
 
-                <div className="flex justify-end gap-3 mt-2">
+                <div className="flex justify-end gap-3 mt-2">// ปุ่มยกเลิก / บันทึก
                   <button
                     onClick={() => setEditModalOpen(false)}
                     className="bg-gray-600 px-4 py-2 rounded-lg"

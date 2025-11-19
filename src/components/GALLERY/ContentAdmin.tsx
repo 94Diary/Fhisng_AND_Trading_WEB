@@ -14,7 +14,7 @@ const ContentAdmin = () => {
           key={post.id}
           post={post}
           currentUser={user}
-          onDelete={deleteGalleryPost} // ✅ ไม่ส่ง onUpdate แล้ว
+          onDelete={deleteGalleryPost} //  ไม่ส่ง onUpdate แล้ว
         />
       ))}
     </div>
