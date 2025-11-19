@@ -12,20 +12,42 @@ const WebBoard = () => {
   if (!user) return <p>Loading...</p>;
 
   const showButtons = location.pathname !== "/webboard";
-  const currentCategory = location.pathname.replace("/gallery/", "");
+  const currentCategory = location.pathname.replace("/webboard/", "");
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
 
   // กำหนด default เผื่อ replace คืนค่าว่าง
 
   const handleSubmit = () => {
     if (!title.trim() || !description.trim()) return alert("กรุณากรอกทุกช่อง!");
-    addPost(title, description, currentCategory);
-    setTitle("");
-    setDescription("");
-    setShowCreateModal(false);
+
+    if (imageFiles.length > 5) {
+      alert("เลือกได้สูงสุด 5 รูปเท่านั้น");
+      return;
+    }
+    
+    // อ่านไฟล์ทุกอันและสร้าง array ของ URL
+    const readerPromises = imageFiles.map(
+      (file) =>
+        new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = () => reject();
+          reader.readAsDataURL(file);
+        })
+    );
+
+    Promise.all(readerPromises).then((urls) => {
+      addPost(title, description,urls,currentCategory);
+      setTitle("");
+      setDescription("");
+      setImageFiles([]);
+      setShowCreateModal(false);
+    });
+   
   };
 
   const handleBack = () => navigate("/webboard");
@@ -65,6 +87,17 @@ const WebBoard = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="p-2 rounded text-black h-32"
+            />
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => {
+                const files = e.target.files;
+                if (!files) return;
+                setImageFiles(Array.from(files).slice(0, 5)); // สูงสุด 5
+              }}
+              className="text-black"
             />
             <div className="flex justify-end gap-4">
               <Buttons variant="back" onClick={() => setShowCreateModal(false)}>
