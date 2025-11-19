@@ -1,108 +1,142 @@
-import React, {useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useAppContext } from "../../context/AppContext";
 import Buttons from "../Buttons/Buttons";
+import { Link, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const CheckIn = () => {
-  const [profileImage, setProfileImage] = useState<string | null>(null); // ทำเกี่ยวกับการเปลี่ยนรูป
-  const [checkedDays, setCheckedDays] = useState<boolean[]>(Array(7).fill(false)); // สำหรับเช็คอิน
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { user, profileImages, checkInStatus, resetCheckIn, handleCheckIn } = useAppContext();
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [status, setStatus] = useState<boolean[]>([]);
+  const [username, setUsername] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const [alreadyCheckInPopup, setAlreadyCheckInPopup] = useState(false);
+  const navigate = useNavigate();
 
-  // ฟังก์ชันเมื่อเลือกไฟล์
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
+  useEffect(() => {
+    if (user) {
+      const images = profileImages[user.username];
+      if (images && images.length > 0) setCurrentImage(images[images.length - 1]);
+
+      const checkIn = checkInStatus[user.username] || Array(7).fill(false);
+      setStatus(checkIn);
+    }
+  }, [user, profileImages, checkInStatus]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUsername(null);
+    setRole(null);
+    navigate("/");
+    window.location.reload();
+  };
+
+  const handleClickCheckIn = () => {
+    if (!user) return;
+
+    const today = new Date().toDateString();
+    const lastCheck = localStorage.getItem(`lastCheck_${user.username}`);
+
+    if (lastCheck === today) {
+      setAlreadyCheckInPopup(true);
+      return;
+    }
+
+    handleCheckIn(user.username);
+
+    const updatedStatus = checkInStatus[user.username] || [];
+    const newStatus = [...updatedStatus];
+    const isAllChecked = newStatus.filter(Boolean).length === 7;
+
+    if (isAllChecked) {
+      resetCheckIn(user.username);
     }
   };
 
-  // ฟังก์ชันเมื่อคลิกที่กรอบ
-  const handleImageClick = () => {
-    fileInputRef.current?.click(); // trigger ให้เปิด file picker
-  };
-
-  // ✅ ฟังก์ชันเช็คอิน (กดปุ่มแล้วติ๊กวันต่อไป)
-  const handleCheckIn = () => {
-    setCheckedDays((prev) => {
-      const newDays = [...prev];
-      const nextIndex = newDays.findIndex((d) => d === false); // หาวันที่ยังไม่เช็ค
-      if (nextIndex !== -1) {
-        newDays[nextIndex] = true; // เช็ควันนั้น
-      }
-      return newDays;
-    });
+  const handleReset = () => {
+    if (user) resetCheckIn(user.username);
   };
 
   return (
-    <div className=" mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen p-6">
-      <div className="flex w-[90%] gap-6">
-        
-        {/* กล่องด้านซ้าย */}
-        <div className="w-[25%] h-[600px] bg-gray-800 p-6 rounded-3xl flex flex-col items-center gap-6">
-          {/* รูปโปรไฟล์*/}
-          <div className="w-40 h-40 rounded-full bg-white overflow-hidden cursor-pointer hover:opacity-50" onClick={handleImageClick}>
-            {profileImage ? (
-              <img src = {profileImage} alt = "CheckIn" className="w-full h-full object-cover"/>
+    <div className="mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen px-4 sm:px-6 lg:px-8 py-6">
+      <AnimatePresence>
+        {alreadyCheckInPopup && (
+          <motion.div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+            <motion.div
+              className="bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-xl text-center w-[90%] max-w-sm"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.2,
+                ease: [0, 0.71, 0.2, 1.01],
+              }}
+            >
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 text-white">
+                วันนี้คุณเช็คอินไปแล้ว!
+              </h2>
+              <Buttons variant="login" onClick={() => setAlreadyCheckInPopup(false)}>
+                ตกลง
+              </Buttons>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="flex flex-col lg:flex-row w-full  gap-6">
+        {/* กล่องซ้าย */}
+        <div className="w-full lg:w-1/4 bg-gray-800 p-6 rounded-3xl flex flex-col items-center gap-6">
+          <div className="w-40 h-40 rounded-full bg-white overflow-hidden">
+            {currentImage ? (
+              <img src={currentImage} alt="Profile" className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-black font-bold opacity-0  hover:opacity-100">
-                Edit
+              <div className="w-full h-full flex items-center justify-center text-black font-bold opacity-50">
+                No Image
               </div>
             )}
-
           </div>
+          <div className="px-4 py-1 font-bold shadow">{user?.username}</div>
 
-          {/* input ไฟล์ (ซ่อน) */}
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            className="hidden"
-          />
-          
-          <div className="px-4 py-1 rounded-lg font-bold shadow">Name</div>
-          {/* ปุ่มเมนู*/}
           <Link className="w-full" to="/Profile">
-            <Buttons variant="profileCom">
-              Profile
-            </Buttons>
+            <Buttons variant="profileCom">Profile</Buttons>
           </Link>
           <Link className="w-full" to="/CheckIn">
-            <Buttons variant="profileCom">
-              Check_IN
+            <Buttons variant="profileCom">Check_IN</Buttons>
+          </Link>
+          <Link className="w-full mt-auto" to={"/PROFILE/login"}>
+            <Buttons variant="logout" onClick={handleLogout}>
+              Log-Out
             </Buttons>
           </Link>
-          {/* ปุ่มออกจากระบบ*/}
-          <Buttons variant="logout">Log-Out</Buttons>
         </div>
 
-        {/* กล่องด้านขวา (หมวดหมู่) */}
-          <div className="order-2 lg:order-1 w-full lg:w-[70%] bg-gray-800 rounded-3xl p-6 flex flex-col gap-6">
-            <h2 className="text-3xl font-bold">Check-In</h2>
-
-            {/* กล่องแสดงแต่ละวัน */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-10 bg-white/10 p-6 rounded-3xl">
-            {checkedDays.map((isChecked, index) => (
+        {/* กล่องขวา */}
+        <div className="w-full lg:w-2/3 bg-gray-800 rounded-3xl p-6 flex flex-col gap-6">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Check-In</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mb-4">
+            {status.map((done, i) => (
               <div
-                key={index}
-                className={`w-24 h-24 rounded-lg flex items-center justify-center font-bold transition transform hover:scale-110
-                  ${isChecked ? "bg-green-400/40 text-white" : "bg-gray-300 text-black  "}`}
+                key={i}
+                className={`h-20 flex items-center justify-center border-2 shadow-black shadow-2xl ${
+                  done ? "bg-green-500 border-green-400" : "bg-gray-700 border-gray-400"
+                }`}
               >
-                {isChecked ? "✅" : `Day ${index + 1}`}
+                {i + 1} day
               </div>
             ))}
           </div>
-              <div className=" flex felx-col items-center justify-center m-4 ">
-                <Buttons variant="checkIn" size="lg" onClick={handleCheckIn}>
-                  Check-In
-                </Buttons>
 
+          <div className="flex justify-center">
+            <Buttons onClick={handleClickCheckIn} variant="checkIn">
+              <div>
+                checkin  
               </div>
-            
+            </Buttons>
           </div>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CheckIn
+export default CheckIn;

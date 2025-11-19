@@ -1,93 +1,110 @@
-import React, {useRef, useState, useEffect } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import React, { useRef, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Buttons from "../Buttons/Buttons";
-import { Home, LogIn } from "lucide-react";
+import { useAppContext } from "../../context/AppContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Profile = () => {
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { user, profileImages, addProfileImage } = useAppContext(); // ใช้ context เพื่อดึงข้อมูลผู้ใช้และรูปโปรไฟล์
+  const fileInputRef = useRef<HTMLInputElement | null>(null); // ref สำหรับ input file (ซ่อน)
+  const [username, setUsername] = useState<string | null>(null); // state เก็บ username (ปัจจุบันไม่ได้ใช้)
+  const [role, setRole] = useState<string | null>(null); // state เก็บ role (ไม่ได้ใช้)
   const navigate = useNavigate();
-  const [username, setUsername] = useState<string | null>(null);
-  const [role, setRole] = useState<string | null>(null);
-  const [email, setEmail] = useState<string | null>(null);
-  const [showPopup, setShowPopup] = useState(false);
+  const [showPopup, setShowPopup] = useState(false); // popup แจ้งให้ล็อกอินก่อน
+  const [currentImage, setCurrentImage] = useState<string | null>(null); // รูปโปรไฟล์ล่าสุด
 
   useEffect(() => {
-      // ดึงข้อมูลจาก localStorage ทุกครั้งที่เปิดหน้านี้
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        const user = JSON.parse(storedUser);
-        setUsername(user.username);
-        setRole(user.role);
-      } else {
-        setShowPopup(true); //ถ้าไม่ได้ล็อคอินจะขึ้น ป๊อบอัพขึ้นมา
-      }
-    }, [navigate]);
-  
-    const handleLogout = () => {
-      localStorage.removeItem("user");
-      setUsername(null);
-      setRole(null);
-      navigate("/");
-    };
+    if (!user) {
+      setShowPopup(true); // ถ้ายังไม่ล็อคอิน ให้แสดง popup
+    } else {
+      const images = profileImages[user.username]; // ดึงรูปทั้งหมดของ user จาก context
+      if (images && images.length > 0) setCurrentImage(images[images.length - 1]); // เอารูปล่าสุดมาแสดง
+    }
+  }, [user, profileImages]);
 
-  // ฟังก์ชันเมื่อเลือกไฟล์
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
+  const handleLogout = () => {
+    localStorage.removeItem("user"); // ลบข้อมูล user ออกจาก localStorage
+    setUsername(null);
+    setRole(null);
+    navigate("/"); // กลับหน้าแรก
+    window.location.reload(); // reload เพื่อ reset state
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; // ดึงไฟล์แรกจาก input
+    if (file && user) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result as string; // แปลงเป็น base64
+        addProfileImage(user.username, base64); // เก็บรูปใหม่เข้า context
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  // ฟังก์ชันเมื่อคลิกที่กรอบ
-  const handleImageClick = () => {
-    fileInputRef.current?.click(); // trigger ให้เปิด file picker
-  };
+  const handleImageClick = () => fileInputRef.current?.click(); // คลิกที่รูปเพิ่อเปิด input file
 
-  if (!username) {return (
-    <>
-      {showPopup && (
-      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 ">
-        <div className="bg-gray-800 p-8 rounded-2xl text-center w-[350px] shadow-xl animate-pop">
-          <h2 className="text-2xl font-bold mb-4 text-white motion-preset-bounce">คุณต้องล็อคอินก่อน</h2>
-          <p className="text-gray-300 mb-6">กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้านี้</p>
-          <button
-            onClick={() => navigate("/Profile/Login")}
-            className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl text-white font-semibold"
-          >
-            ไปหน้า Login
-          </button>
-        </div>
-      </div>
-    
-  )}
-  </>
-  )}
-  
+  if (!user?.username) {
+    // ถ้ายังไม่ล็อคอินให้ขึ้น popup
+    return (
+      <AnimatePresence>
+        {showPopup && (
+          <motion.div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+            <motion.div
+              className="bg-gray-800 p-6 sm:p-8 rounded-2xl text-center w-[90%] max-w-sm shadow-xl"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.2,
+                ease: [0, 0.71, 0.2, 1.01],
+              }}
+            >
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 text-white">
+                คุณต้องล็อคอินก่อน
+              </h2>
+              <p className="text-gray-300 mb-6">
+                กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้านี้
+              </p>
+              <button
+                onClick={() => navigate("/Profile/Login")}
+                className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl text-white font-semibold"
+              >
+                ไปหน้า Login
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  }
+
   return (
+    <div className="mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen px-4 sm:px-6 lg:px-8 py-6">
+      <div className="flex flex-col lg:flex-row w-full gap-6">
 
-    <div className=" mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen p-6">
-      
-      <div className="flex w-[90%] gap-6">
-        
         {/* กล่องด้านซ้าย */}
-        <div className="w-[25%] h-[600px] bg-gray-800 p-6 rounded-3xl flex flex-col items-center gap-6">
-          {/* รูปโปรไฟล์*/}
-          <div className="w-40 h-40 rounded-full bg-white overflow-hidden cursor-pointer hover:opacity-50" onClick={handleImageClick}>
-            {profileImage ? (
-              <img src = {profileImage} alt = "Profile" className="w-full h-full object-cover"/>
+        <div className="w-full lg:w-1/4 bg-gray-800 p-6 rounded-3xl flex flex-col items-center gap-6">
+
+          {/* รูปโปรไฟล์ */}
+          <div
+            className="w-40 h-40 rounded-full bg-white overflow-hidden cursor-pointer hover:opacity-50"
+            onClick={handleImageClick} // คลิกเพื่ออัปโหลดรูปใหม่
+          >
+            {currentImage ? (
+              <img
+                src={currentImage}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-black font-bold opacity-0 hover:opacity-100">
                 Edit
               </div>
             )}
-
-            
-
           </div>
 
-          {/* input ไฟล์ (ซ่อน) */}
+          {/* input file แบบซ่อน */}
           <input
             type="file"
             accept="image/*"
@@ -95,44 +112,47 @@ const Profile = () => {
             onChange={handleFileChange}
             className="hidden"
           />
-          
-          <div className="px-4 py-1 font-bold shadow">{username}</div>
-          {/* ปุ่มเมนู*/}
+
+          {/* ชื่อผู้ใช้ */}
+          <div className="px-4 py-1 font-bold shadow">{user.username}</div>
+
+          {/* ปุ่มลิงก์ต่าง ๆ */}
           <Link className="w-full" to="/Profile">
-            <Buttons variant="profileCom">
-              Profile
-            </Buttons>
+            <Buttons variant="profileCom">Profile</Buttons>
           </Link>
+
           <Link className="w-full" to="/CheckIn">
-            <Buttons variant="profileCom">
-              Check_IN
+            <Buttons variant="profileCom">Check_IN</Buttons>
+          </Link>
+
+          {/* Logout */}
+          <Link className="w-full mt-auto" to={"/PROFILE/login"}>
+            <Buttons variant="logout" onClick={handleLogout}>
+              Log-Out
             </Buttons>
           </Link>
-          {/* ปุ่มออกจากระบบ*/}
-          <Buttons variant="logout" onClick={handleLogout}>Log-Out</Buttons>
         </div>
 
-        {/* กล่องด้านขวา (หมวดหมู่) */}
-          <div className="w-[70%] bg-gray-800 rounded-3xl p-6 flex flex-col gap-6">
-            <h2 className="text-3xl font-bold">Accout Info</h2>
-            <div className="space-y-3">
-              <p>
-                Display Name: <span className="font-semibold">{username}</span>
-              </p>
-              <p>
-                UserName: <span className="font-semibold">{username}</span>
-              </p>
-              <p>
-                Role: <span className="font-semibold">{role}</span>
-              </p>
-              <p>
-                Email: <span className="font-semibold">{email}</span>
-              </p>
-            </div>
+        {/* กล่องข้อมูลบัญชีด้านขวา */}
+        <div className="w-full lg:w-2/3 bg-gray-800 rounded-3xl p-6 flex flex-col gap-6">
+          <h2 className="text-2xl sm:text-3xl font-bold">Account Info</h2>
+
+          {/* แสดงข้อมูลบัญชี */}
+          <div className="space-y-3 text-sm sm:text-base">
+            <p>
+              Display Name: <span className="font-semibold">{user.username}</span>
+            </p>
+            <p>
+              UserName: <span className="font-semibold">{user.username}</span>
+            </p>
+            <p>
+              Role: <span className="font-semibold">{user.role}</span>
+            </p>
           </div>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

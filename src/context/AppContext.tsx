@@ -25,7 +25,8 @@ export interface Post {
   title: string;
   description: string;
   author: string;
-  category: string; // general | news
+  imageUrls: string[];
+  category: string;
   likes: number;
   dislikes: number;
   reports: number;
@@ -37,11 +38,9 @@ export interface Post {
 
 export interface GalleryPost {
   id: number;
-  title: string;
-  description: string;
-  category: string; // general | news
+  category: string;
   author: string;
-  imageUrls: string[]; // แก้เป็น array
+  imageUrls: string[];
   likes: number;
   dislikes: number;
   reports: number;
@@ -51,15 +50,17 @@ export interface GalleryPost {
   comments?: Comment[];
 }
 
-// ================= Context Type =================
+// Context Type
 interface AppContextType {
+  getTopLikedPosts: (limit?: number) => Post[];
+
   user: User | null;
   login: (username: string, password: string) => boolean;
   logout: () => void;
 
   posts: Post[];
-  addPost: (title: string, description: string, category: string) => void;
-  editPost: (id: number, title: string, description: string) => void;
+  addPost: (title: string, description: string,imageUrls: string[], category: string) => void;
+  editPost: (id: number, title: string, description: string ,imageUrls: string[]) => void;
   deletePost: (id: number) => void;
   likePost: (id: number) => void;
   dislikePost: (id: number) => void;
@@ -67,7 +68,7 @@ interface AppContextType {
   addComment: (postId: number, content: string) => void;
 
   galleryPosts: GalleryPost[];
-  addGalleryPost: (title: string, description: string, imageUrls: string[], category: string) => void;
+  addGalleryPost: (imageUrls: string[], category: string) => void;
   editGalleryPost: (id: number, title: string, description: string) => void;
   deleteGalleryPost: (id: number) => void;
   likeGalleryPost: (id: number) => void;
@@ -78,19 +79,30 @@ interface AppContextType {
   codes: CodeItem[];
   addCode: (title: string) => void;
   toggleCodeCheck: (id: number) => void;
+
+  profileImages: Record<string, string[]>;
+  addProfileImage: (username: string, image: string) => void;
+
+  checkInStatus: Record<string, boolean[]>;
+  handleCheckIn: (username: string) => void;
+  resetCheckIn: (username: string) => void;
+
 }
 
-// ================= Context =================
+// Context
 const AppContext = createContext<AppContextType | null>(null);
+
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [galleryPosts, setGalleryPosts] = useState<GalleryPost[]>([]);
   const [codes, setCodes] = useState<CodeItem[]>([]);
+  const [profileImages, setProfileImages] = useState<Record<string, string[]>>({});
+  const [checkInStatus, setCheckInStatus] = useState<Record<string, boolean[]>>({});
   const [isLoading, setIsLoading] = useState(true);
 
-  // ===== Load from localStorage =====
+  //Load from localStorage 
   useEffect(() => {
     try {
       const storedUser = localStorage.getItem("user");
@@ -104,6 +116,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       const storedCodes = localStorage.getItem("codes");
       if (storedCodes) setCodes(JSON.parse(storedCodes));
+
+      // load profileImages
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith("profileImages_")) {
+          const username = key.replace("profileImages_", "");
+          const images = JSON.parse(localStorage.getItem(key) || "[]");
+          setProfileImages(prev => ({ ...prev, [username]: images }));
+        }
+      });
+
+      // load checkInStatus
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith("checkIn_")) {
+          const username = key.replace("checkIn_", "");
+          const status = JSON.parse(localStorage.getItem(key) || JSON.stringify(Array(7).fill(false)));
+          setCheckInStatus(prev => ({ ...prev, [username]: status }));
+        }
+      });
     } catch (error) {
       console.error("Error loading from localStorage", error);
     } finally {
@@ -111,34 +141,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, []);
 
-  // ===== Save to localStorage =====
+  // Save to localStorage 
   useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem("user", JSON.stringify(user));
-    }
+    if (!isLoading) localStorage.setItem("user", JSON.stringify(user));
   }, [user, isLoading]);
 
   useEffect(() => {
-    if (!isLoading) {
-      console.log("Saving posts:", posts);
-      localStorage.setItem("posts", JSON.stringify(posts));
-    }
+    if (!isLoading) localStorage.setItem("posts", JSON.stringify(posts));
   }, [posts, isLoading]);
 
   useEffect(() => {
-    if (!isLoading) {
-      console.log("Saving galleryPosts:", galleryPosts);
-      localStorage.setItem("galleryPosts", JSON.stringify(galleryPosts));
-    }
+    if (!isLoading) localStorage.setItem("galleryPosts", JSON.stringify(galleryPosts));
   }, [galleryPosts, isLoading]);
 
   useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem("codes", JSON.stringify(codes));
-    }
+    if (!isLoading) localStorage.setItem("codes", JSON.stringify(codes));
   }, [codes, isLoading]);
 
-  // ================= Auth =================
+  // Auth
   const login = (username: string, password: string): boolean => {
     let userData: User | null = null;
     if (username === "admin" && password === "1234") userData = { username, role: "admin" };
@@ -155,15 +175,51 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setUser(null);
   };
 
-  // ================= Code =================
+  // Profile Image 
+  const addProfileImage = (username: string, image: string) => {
+    setProfileImages(prev => {
+      const userImages = prev[username] || [];
+      const newImages = [...userImages, image];
+      localStorage.setItem(`profileImages_${username}`, JSON.stringify(newImages));
+      return { ...prev, [username]: newImages };
+    });
+  };
+
+  //  Check-In 
+  const handleCheckIn = (username: string) => {
+    //const now = Date.now();
+    const today = new Date().toDateString();
+    const lastCheck = localStorage.getItem(`lastCheck_${username}`); //รายวัน
+    //const lastCheck = Number(localStorage.getItem(`lastCheck_${username}`) || 0); //ราย 10 วินาที ทดสอบเฉยๆ
+
+    if (lastCheck === today) return; //รายวัน
+
+    //if (now - lastCheck < 10 * 1000) return;// ราย 10 วินาที ทดสอบเฉยๆ
+
+
+    setCheckInStatus(prev => {
+      const userStatus = prev[username] || Array(7).fill(false);
+      const nextIndex = userStatus.findIndex(d => !d);
+      if (nextIndex !== -1) {
+        const newStatus = [...userStatus];
+        newStatus[nextIndex] = true;
+        localStorage.setItem(`checkIn_${username}`, JSON.stringify(newStatus));
+        localStorage.setItem(`lastCheck_${username}`, today);
+        return { ...prev, [username]: newStatus };
+      }
+      return prev;
+    });
+  };
+
+  //  Code 
   const addCode = (title: string) => {
-    if (!user || user.role !== "admin" || isLoading) return;
+    if (!user) return;
     const newCode: CodeItem = { id: Date.now(), title, checkedBy: [] };
     setCodes(prev => [newCode, ...prev]);
   };
 
   const toggleCodeCheck = (id: number) => {
-    if (!user || isLoading) return;
+    if (!user) return;
     setCodes(prev =>
       prev.map(c =>
         c.id === id
@@ -177,15 +233,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       )
     );
   };
+  //  TopLike 
+  const getTopLikedPosts = (limit: number = 3): Post[] => {
+  return [...posts]
+    .sort((a, b) => b.likes - a.likes)
+    .slice(0, limit);
+};
 
-  // ================= WebBoard =================
-  const addPost = (title: string, description: string, category: string) => {
-    if (!user || isLoading) return;
+
+  //  Posts 
+  const addPost = (title: string, description: string,imageUrls:string[] ,category: string) => {
+    if (!user) return;
     const newPost: Post = {
       id: Date.now(),
       title,
       description,
       author: user.username,
+      imageUrls,
       category,
       likes: 0,
       dislikes: 0,
@@ -198,20 +262,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setPosts(prev => [newPost, ...prev]);
   };
 
-  const editPost = (id: number, title: string, description: string) => {
-    if (isLoading) return;
-    setPosts(prev => prev.map(p => (p.id === id ? { ...p, title, description } : p)));
+  const editPost = (id: number, title: string, description: string, imageUrls: string[]) => {
+    setPosts(prev => {
+      const updated = prev.map(p => (p.id === id ? { ...p, title, description, imageUrls } : p));
+      localStorage.setItem("posts", JSON.stringify(updated));
+      return updated;
+    });
   };
 
+
   const deletePost = (id: number) => {
-    if (!user || isLoading) return;
-    setPosts(prev =>
-      prev.filter(p => (user.role === "admin" ? p.id !== id : p.author === user.username ? p.id !== id : true))
-    );
+  if (!user) return;
+    setPosts(prev => {
+      const updated = prev.filter(p =>
+        user.role === "admin" ? p.id !== id : p.author === user.username ? p.id !== id : true
+      );
+      localStorage.setItem("posts", JSON.stringify(updated)); // ✅ เซฟกลับ
+      return updated;
+    });
   };
 
   const likePost = (id: number) => {
-    if (!user || isLoading) return;
+    if (!user) return;
     setPosts(prev =>
       prev.map(p => {
         if (p.id !== id) return p;
@@ -229,7 +301,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const dislikePost = (id: number) => {
-    if (!user || isLoading) return;
+    if (!user) return;
     setPosts(prev =>
       prev.map(p => {
         if (p.id !== id) return p;
@@ -247,7 +319,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const reportPost = (id: number) => {
-    if (!user || isLoading) return;
+    if (!user) return;
     setPosts(prev =>
       prev.map(p => {
         if (p.id !== id) return p;
@@ -262,7 +334,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const addComment = (postId: number, content: string) => {
-    if (!user || isLoading) return;
+    if (!user) return;
     setPosts(prev =>
       prev.map(p =>
         p.id === postId
@@ -272,13 +344,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
-  // ================= Gallery =================
-  const addGalleryPost = (title: string, description: string, imageUrls: string[], category: string) => {
-    if (!user || isLoading) return;
+  //  Gallery 
+  const addGalleryPost = (imageUrls: string[], category: string) => {
+    if (!user) return;
     const newPost: GalleryPost = {
       id: Date.now(),
-      title,
-      description,
       category,
       imageUrls,
       author: user.username,
@@ -294,19 +364,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const editGalleryPost = (id: number, title: string, description: string) => {
-    if (isLoading) return;
     setGalleryPosts(prev => prev.map(p => (p.id === id ? { ...p, title, description } : p)));
   };
 
   const deleteGalleryPost = (id: number) => {
-    if (!user || isLoading) return;
+    if (!user) return;
     setGalleryPosts(prev =>
       prev.filter(p => (user.role === "admin" ? p.id !== id : p.author === user.username ? p.id !== id : true))
     );
   };
 
   const likeGalleryPost = (id: number) => {
-    if (!user || isLoading) return;
+    if (!user) return;
     setGalleryPosts(prev =>
       prev.map(p => {
         if (p.id !== id) return p;
@@ -324,7 +393,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const dislikeGalleryPost = (id: number) => {
-    if (!user || isLoading) return;
+    if (!user) return;
     setGalleryPosts(prev =>
       prev.map(p => {
         if (p.id !== id) return p;
@@ -342,7 +411,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const reportGalleryPost = (id: number) => {
-    if (!user || isLoading) return;
+    if (!user) return;
     setGalleryPosts(prev =>
       prev.map(p => {
         if (p.id !== id) return p;
@@ -357,7 +426,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const addGalleryComment = (postId: number, content: string) => {
-    if (!user || isLoading) return;
+    if (!user) return;
     setGalleryPosts(prev =>
       prev.map(p =>
         p.id === postId
@@ -367,7 +436,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
-  // ================= Provider =================
+  const resetCheckIn = (username: string) => {
+    setCheckInStatus(prev => {
+      const newStatus = Array(7).fill(false); // รีเซ็ตทั้งสัปดาห์
+      localStorage.setItem(`checkIn_${username}`, JSON.stringify(newStatus));
+      localStorage.removeItem(`lastCheck_${username}`); // ลบวันที่เช็คอินล่าสุด
+      return { ...prev, [username]: newStatus };
+    });
+  };
+
+  //  Provider 
   return (
     <AppContext.Provider
       value={{
@@ -393,8 +471,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         codes,
         addCode,
         toggleCodeCheck,
+        profileImages,
+        addProfileImage,
+        checkInStatus,
+        handleCheckIn,
+        resetCheckIn,
+        getTopLikedPosts, 
       }}
     >
+
       {isLoading ? <p>Loading...</p> : children}
     </AppContext.Provider>
   );

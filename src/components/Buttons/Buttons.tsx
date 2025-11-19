@@ -27,10 +27,9 @@ const Buttons: React.FC<ButtonProps> = ({
     switch (variant) {
         case 'checkIn':
             variantStyles = `
-                bg-green-500 text-white border-white
-                hover:bg-green-700 hover:border-black-500 hover:scale-125
-                focus:ring-4 focus:ring-green-300 focus:ring-opacity-50
-                shadow-lg hover:shadow-xl transition duration-300 cursor-pointer
+                bg-white text-black border-black-2xl w-[10%]
+                hover:bg-black hover:border-white hover:scale-105 hover:text-white
+                shadow-2xl shadow-black hover:shadow-xl transition duration-300  cursor-pointer
                 active:scale-50 active:transition active:bg-gray-700
             `;
             break;
@@ -38,7 +37,7 @@ const Buttons: React.FC<ButtonProps> = ({
         case 'profileCom':
             variantStyles = `
                 bg-white text-black w-full  rounded-lg font-[700]
-                hover:bg-gradient-to-r from-[#37D5D6] to-[#36096D] hover:scale-110  transition 
+                hover:bg-black hover:border-white hover:scale-105 hover:text-white  transition 
                 hover:shadow-lg shadow-lg shadow-black hover:shadow-purple-400 cursor-pointer
                 active:scale-50 active:transitive
             `;
@@ -46,35 +45,26 @@ const Buttons: React.FC<ButtonProps> = ({
         
         case 'logout':
             variantStyles = `
-                bg-red-600 px-4 py-2 w-full rounded-lg mt-auto font-[700]
-                hover:bg-red-800 hover:scale-110
-                shadow-lg shadow-black hover:shadow-red-500 transition cursor-pointer
+                bg-red-500 px-4 py-2 w-full rounded-lg mt-auto font-[700]
+                hover:bg-red-800 hover:scale-105
+                shadow-lg shadow-black hover:shadow-black transition cursor-pointer
                 active:scale-50 active:transitive
             `;
             break;  
 
-        case 'history':
-            variantStyles = ` 
-                bg-purple-600 px-6 py-3 rounded-lg text-lg font-[700]  
-                hover:bg-gradient-to-r from-[#37D5D6] to-[#36096D] hover:scale-110  transition 
-                shadow-lg shadow-black hover:shadow-purple-900 transition cursor-pointer
-                active:scale-50 active:transitive
-            `;
-            break;
-
         case 'create':
             variantStyles = ` 
                 bg-green-500 px-6 py-3 rounded-lg text-lg font-[700]  
-                hover:bg-gradient-to-r from-[#37D5D6] to-[#36096D] hover:scale-110  transition
-                shadow-lg shadow-black hover:shadow-green-900 transition cursor-pointer
+                hover:bg-black hover:border-white hover:scale-105 hover:text-white  transition
+                shadow-lg shadow-black hover:shadow-black transition cursor-pointer
                 active:scale-50 active:transitive
             `;
             break;
         
         case 'login':
             variantStyles = `
-                bg-green-500 text-white w-full rounded-2lg font-[700]
-                hover:bg-gradient-to-r from-[#37D5D6] to-[#36096D] hover:scale-125  transition
+                bg-white text-black pt-0 pb-0 pl-0 pr-0 h-10 w-full rounded-2lg font-[700]
+                hover:bg-black hover:border-white hover:scale-105 hover:text-white  transition
                 hover:shadow-lg shadow-lg shadow-black hover:shadow-purple-400 cursor-pointer
                 active:scale-50 active:transitive
             `;
@@ -82,9 +72,9 @@ const Buttons: React.FC<ButtonProps> = ({
 
         case 'back' : 
             variantStyles = `
-                bg-blue-500 px-6 py-3 rounded-lg text-lg font-[700]  
-                hover:bg-gradient-to-r from-[#37D5D6] to-[#36096D] hover:scale-110  transition
-                shadow-lg shadow-black hover:shadow-green-900 transition cursor-pointer
+                bg-red-500 px-6 py-3 rounded-lg text-lg font-[700]  
+                hover:bg-black hover:border-white hover:scale-105 hover:text-white  transition
+                shadow-lg shadow-black hover:shadow-black transition cursor-pointer
                 active:scale-50 active:transitive
             `;
             break;
@@ -92,7 +82,7 @@ const Buttons: React.FC<ButtonProps> = ({
         case 'register':
             variantStyles = `
                 bg-white text-black w-full rounded-lg font-[700]
-                hover:bg-gradient-to-r from-[#37D5D6] to-[#36096D] hover:scale-125  transition
+                hover:bg-black hover:border-white hover:scale-105 hover:text-white  transition
                 hover:shadow-lg shadow-lg shadow-black hover:shadow-purple-400 cursor-pointer
                 active:scale-50 active:transitive
             `;
