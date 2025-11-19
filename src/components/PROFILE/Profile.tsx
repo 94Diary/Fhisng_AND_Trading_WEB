@@ -5,46 +5,47 @@ import { useAppContext } from "../../context/AppContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Profile = () => {
-  const { user, profileImages, addProfileImage } = useAppContext();
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [username, setUsername] = useState<string | null>(null);
-  const [role, setRole] = useState<string | null>(null);
+  const { user, profileImages, addProfileImage } = useAppContext(); // ใช้ context เพื่อดึงข้อมูลผู้ใช้และรูปโปรไฟล์
+  const fileInputRef = useRef<HTMLInputElement | null>(null); // ref สำหรับ input file (ซ่อน)
+  const [username, setUsername] = useState<string | null>(null); // state เก็บ username (ปัจจุบันไม่ได้ใช้)
+  const [role, setRole] = useState<string | null>(null); // state เก็บ role (ไม่ได้ใช้)
   const navigate = useNavigate();
-  const [showPopup, setShowPopup] = useState(false);
-  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [showPopup, setShowPopup] = useState(false); // popup แจ้งให้ล็อกอินก่อน
+  const [currentImage, setCurrentImage] = useState<string | null>(null); // รูปโปรไฟล์ล่าสุด
 
   useEffect(() => {
     if (!user) {
-      setShowPopup(true);
+      setShowPopup(true); // ถ้ายังไม่ล็อคอิน ให้แสดง popup
     } else {
-      const images = profileImages[user.username];
-      if (images && images.length > 0) setCurrentImage(images[images.length - 1]);
+      const images = profileImages[user.username]; // ดึงรูปทั้งหมดของ user จาก context
+      if (images && images.length > 0) setCurrentImage(images[images.length - 1]); // เอารูปล่าสุดมาแสดง
     }
   }, [user, profileImages]);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem("user"); // ลบข้อมูล user ออกจาก localStorage
     setUsername(null);
     setRole(null);
-    navigate("/");
-    window.location.reload();
+    navigate("/"); // กลับหน้าแรก
+    window.location.reload(); // reload เพื่อ reset state
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]; // ดึงไฟล์แรกจาก input
     if (file && user) {
       const reader = new FileReader();
       reader.onload = () => {
-        const base64 = reader.result as string;
-        addProfileImage(user.username, base64);
+        const base64 = reader.result as string; // แปลงเป็น base64
+        addProfileImage(user.username, base64); // เก็บรูปใหม่เข้า context
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleImageClick = () => fileInputRef.current?.click();
+  const handleImageClick = () => fileInputRef.current?.click(); // คลิกที่รูปเพิ่อเปิด input file
 
   if (!user?.username) {
+    // ถ้ายังไม่ล็อคอินให้ขึ้น popup
     return (
       <AnimatePresence>
         {showPopup && (
@@ -59,8 +60,12 @@ const Profile = () => {
                 ease: [0, 0.71, 0.2, 1.01],
               }}
             >
-              <h2 className="text-xl sm:text-2xl font-bold mb-4 text-white">คุณต้องล็อคอินก่อน</h2>
-              <p className="text-gray-300 mb-6">กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้านี้</p>
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 text-white">
+                คุณต้องล็อคอินก่อน
+              </h2>
+              <p className="text-gray-300 mb-6">
+                กรุณาเข้าสู่ระบบเพื่อเข้าถึงหน้านี้
+              </p>
               <button
                 onClick={() => navigate("/Profile/Login")}
                 className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-xl text-white font-semibold"
@@ -77,14 +82,21 @@ const Profile = () => {
   return (
     <div className="mt-20 flex flex-col items-center bg-transparent text-white w-full min-h-screen px-4 sm:px-6 lg:px-8 py-6">
       <div className="flex flex-col lg:flex-row w-full gap-6">
+
         {/* กล่องด้านซ้าย */}
-        <div className="w-full  lg:w-1/4 bg-gray-800 p-6 rounded-3xl flex flex-col items-center gap-6">
+        <div className="w-full lg:w-1/4 bg-gray-800 p-6 rounded-3xl flex flex-col items-center gap-6">
+
+          {/* รูปโปรไฟล์ */}
           <div
             className="w-40 h-40 rounded-full bg-white overflow-hidden cursor-pointer hover:opacity-50"
-            onClick={handleImageClick}
+            onClick={handleImageClick} // คลิกเพื่ออัปโหลดรูปใหม่
           >
             {currentImage ? (
-              <img src={currentImage} alt="Profile" className="w-full h-full object-cover" />
+              <img
+                src={currentImage}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-black font-bold opacity-0 hover:opacity-100">
                 Edit
@@ -92,6 +104,7 @@ const Profile = () => {
             )}
           </div>
 
+          {/* input file แบบซ่อน */}
           <input
             type="file"
             accept="image/*"
@@ -100,15 +113,19 @@ const Profile = () => {
             className="hidden"
           />
 
+          {/* ชื่อผู้ใช้ */}
           <div className="px-4 py-1 font-bold shadow">{user.username}</div>
 
+          {/* ปุ่มลิงก์ต่าง ๆ */}
           <Link className="w-full" to="/Profile">
             <Buttons variant="profileCom">Profile</Buttons>
           </Link>
+
           <Link className="w-full" to="/CheckIn">
             <Buttons variant="profileCom">Check_IN</Buttons>
           </Link>
 
+          {/* Logout */}
           <Link className="w-full mt-auto" to={"/PROFILE/login"}>
             <Buttons variant="logout" onClick={handleLogout}>
               Log-Out
@@ -116,9 +133,11 @@ const Profile = () => {
           </Link>
         </div>
 
-        {/* กล่องด้านขวา */}
+        {/* กล่องข้อมูลบัญชีด้านขวา */}
         <div className="w-full lg:w-2/3 bg-gray-800 rounded-3xl p-6 flex flex-col gap-6">
           <h2 className="text-2xl sm:text-3xl font-bold">Account Info</h2>
+
+          {/* แสดงข้อมูลบัญชี */}
           <div className="space-y-3 text-sm sm:text-base">
             <p>
               Display Name: <span className="font-semibold">{user.username}</span>

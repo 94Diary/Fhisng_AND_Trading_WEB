@@ -50,7 +50,7 @@ export interface GalleryPost {
   comments?: Comment[];
 }
 
-// ================= Context Type =================
+// Context Type
 interface AppContextType {
   getTopLikedPosts: (limit?: number) => Post[];
 
@@ -89,10 +89,8 @@ interface AppContextType {
 
 }
 
-// ================= Context =================
+// Context
 const AppContext = createContext<AppContextType | null>(null);
-
-
 
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -104,7 +102,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [checkInStatus, setCheckInStatus] = useState<Record<string, boolean[]>>({});
   const [isLoading, setIsLoading] = useState(true);
 
-  // ===== Load from localStorage =====
+  //Load from localStorage 
   useEffect(() => {
     try {
       const storedUser = localStorage.getItem("user");
@@ -143,7 +141,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, []);
 
-  // ===== Save to localStorage =====
+  // Save to localStorage 
   useEffect(() => {
     if (!isLoading) localStorage.setItem("user", JSON.stringify(user));
   }, [user, isLoading]);
@@ -160,7 +158,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (!isLoading) localStorage.setItem("codes", JSON.stringify(codes));
   }, [codes, isLoading]);
 
-  // ================= Auth =================
+  // Auth
   const login = (username: string, password: string): boolean => {
     let userData: User | null = null;
     if (username === "admin" && password === "1234") userData = { username, role: "admin" };
@@ -177,7 +175,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setUser(null);
   };
 
-  // ================= Profile Image =================
+  // Profile Image 
   const addProfileImage = (username: string, image: string) => {
     setProfileImages(prev => {
       const userImages = prev[username] || [];
@@ -187,7 +185,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  // ================= Check-In =================
+  //  Check-In 
   const handleCheckIn = (username: string) => {
     //const now = Date.now();
     const today = new Date().toDateString();
@@ -213,7 +211,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  // ================= Code =================
+  //  Code 
   const addCode = (title: string) => {
     if (!user) return;
     const newCode: CodeItem = { id: Date.now(), title, checkedBy: [] };
@@ -235,7 +233,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       )
     );
   };
-  // ================= TopLike ===============
+  //  TopLike 
   const getTopLikedPosts = (limit: number = 3): Post[] => {
   return [...posts]
     .sort((a, b) => b.likes - a.likes)
@@ -243,7 +241,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 };
 
 
-  // ================= Posts =================
+  //  Posts 
   const addPost = (title: string, description: string,imageUrls:string[] ,category: string) => {
     if (!user) return;
     const newPost: Post = {
@@ -346,7 +344,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
-  // ================= Gallery =================
+  //  Gallery 
   const addGalleryPost = (imageUrls: string[], category: string) => {
     if (!user) return;
     const newPost: GalleryPost = {
@@ -447,7 +445,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  // ================= Provider =================
+  //  Provider 
   return (
     <AppContext.Provider
       value={{
@@ -478,7 +476,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         checkInStatus,
         handleCheckIn,
         resetCheckIn,
-        getTopLikedPosts, // ✅ เพิ่มตรงนี้
+        getTopLikedPosts, 
       }}
     >
 

@@ -5,19 +5,21 @@ import { useAppContext } from "../../context/AppContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Gallery = () => {
-  const { user, addGalleryPost } = useAppContext();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [showPopup, setShowPopup] = useState(false);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const { user, addGalleryPost } = useAppContext(); // ดึง user และฟังก์ชันเพิ่มโพสต์
+  const location = useLocation(); // ใช้เช็ค path ปัจจุบัน
+  const navigate = useNavigate(); // ใช้ navigate ไปหน้าอื่น
+  const [showPopup, setShowPopup] = useState(false); // popup สำหรับล็อกอิน
+  const [showCreateModal, setShowCreateModal] = useState(false); // modal สร้างโพสต์
+  const [imageFiles, setImageFiles] = useState<File[]>([]); // state เก็บไฟล์รูปที่เลือก
 
-  const currentCategory = location.pathname.replace("/gallery/", "");
+  const currentCategory = location.pathname.replace("/gallery/", ""); // แยกชื่อ category จาก path
 
+  // ตรวจสอบ user ถ้าไม่ล็อกอินให้ popup
   useEffect(() => {
     if (!user) setShowPopup(true);
   }, [user]);
 
+  // ฟังก์ชัน submit สร้างโพสต์
   const handleSubmit = () => {
     if (imageFiles.length === 0) {
       alert("กรุณาเลือกภาพอย่างน้อย 1 รูป!");
@@ -29,6 +31,7 @@ const Gallery = () => {
       return;
     }
 
+    // แปลงไฟล์เป็น base64
     const readerPromises = imageFiles.map(
       (file) =>
         new Promise<string>((resolve, reject) => {
@@ -39,13 +42,15 @@ const Gallery = () => {
         })
     );
 
+    // หลังแปลงเสร็จ ส่งไป addGalleryPost
     Promise.all(readerPromises).then((urls) => {
       addGalleryPost(urls, currentCategory);
-      setImageFiles([]);
-      setShowCreateModal(false);
+      setImageFiles([]); // เคลียร์ไฟล์
+      setShowCreateModal(false); // ปิด modal
     });
   };
 
+  // ถ้า user ไม่ล็อกอิน
   if (!user?.username) {
     return (
       <AnimatePresence>
@@ -85,6 +90,7 @@ const Gallery = () => {
       {/* ปุ่ม Create / Back */}
       {location.pathname !== "/gallery" && (
         <div className="flex flex-col sm:flex-row justify-end w-full max-w-5xl mb-4 gap-4">
+          {/* ถ้า user ไม่ใช่ role user หรือ category ไม่ใช่ news จึงแสดง create */}
           {user?.role !== "user" || currentCategory !== "news" ? (
             <Buttons variant="create" onClick={() => setShowCreateModal(true)}>
               Create Gallery Post
@@ -114,6 +120,7 @@ const Gallery = () => {
                 สร้างโพสต์ใหม่
               </h2>
 
+              {/* Input สำหรับเลือกไฟล์รูป */}
               <input
                 type="file"
                 accept="image/*"
@@ -121,11 +128,12 @@ const Gallery = () => {
                 onChange={(e) => {
                   const files = e.target.files;
                   if (!files) return;
-                  setImageFiles(Array.from(files).slice(0, 5));
+                  setImageFiles(Array.from(files).slice(0, 5)); // จำกัดสูงสุด 5 รูป
                 }}
                 className="text-black"
               />
 
+              {/* ปุ่มยกเลิก / สร้างโพสต์ */}
               <div className="flex justify-end gap-4">
                 <Buttons variant="back" onClick={() => setShowCreateModal(false)}>
                   ยกเลิก
@@ -142,7 +150,7 @@ const Gallery = () => {
       {/* Post List */}
       <div className="w-full max-w-5xl">
         <div className="flex flex-col gap-6 bg-gray-800 p-6 rounded-lg items-center">
-          <Outlet />
+          <Outlet /> {/* แสดง GalleryPost ตาม route ย่อย */}
         </div>
       </div>
     </div>
